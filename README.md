@@ -1,6 +1,8 @@
 # electron-calc
 
-A simple calculator using Math.js
+A simple calculator using Math.js, inspired by [Caligator](https://github.com/sarthology/caligator).
+
+![Example 1](https://cdn.mauritzonline.com/electron_calc/example1.jpg)
 
 ---
 
