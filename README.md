@@ -2,7 +2,7 @@
 
 Calculator built using Math.js, inspired by [Caligator](https://github.com/sarthology/caligator).
 
-Supports custom functions and variables. Also supports most of the functions that Mathjs has ([Mathjs functions](https://mathjs.org/docs/reference/functions.html)).
+Supports custom functions and variables. Also supports most of the functions that Mathjs has *([Mathjs functions](https://mathjs.org/docs/reference/functions.html))*.
 
 Supports conversions from different lengths and weights.
 
