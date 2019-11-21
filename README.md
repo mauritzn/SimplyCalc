@@ -2,6 +2,8 @@
 
 A simple calculator using Math.js, inspired by [Caligator](https://github.com/sarthology/caligator).
 
+**Try it:** https://electron-calc.mauritzonline.com/
+
 ![Example 1](https://cdn.mauritzonline.com/electron_calc/example1.jpg)
 
 ---
