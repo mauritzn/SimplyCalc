@@ -6,6 +6,8 @@ Supports custom functions and variables. Also supports most of the functions tha
 
 Supports conversions from different lengths and weights.
 
+-----
+
 **Try it:** https://electron-calc.mauritzonline.com/
 
 ![Example 1](https://cdn.mauritzonline.com/electron_calc/example2.jpg)
