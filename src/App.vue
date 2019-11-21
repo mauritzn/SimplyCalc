@@ -5,9 +5,14 @@
     </header>
 
     <div class="container">
-      <textarea name="mathInput" placeholder="Math goes here" v-model="mathInput"></textarea>
+      <div id="calcEditor">
+        <span class="placeholder">Math goes here</span>
+      </div>
       <div class="separator"></div>
-      <div class="mathResult" :class="(currentTextareaLine > 0 ? 'showActiveLine' : '')">
+      <div
+        class="mathResult"
+        :class="(currentTextareaLine > 0 && editorInFocus ? 'showActiveLine' : '')"
+      >
         <p
           v-for="(result, index) in mathResult"
           :key="index"
@@ -18,32 +23,64 @@
   </div>
 </template>
 
+<style lang="scss">
+#calcEditor {
+  > .placeholder {
+    position: absolute;
+    letter-spacing: 0.1rem;
+    font-weight: var(--weight-bold);
+    line-height: var(--input-lh);
+    opacity: 0.5;
+    z-index: 100;
+  }
+
+  /* .mtkb {
+    padding: 0 5px;
+  } */
+
+  .view-lines {
+    letter-spacing: 0.1rem !important;
+  }
+
+  canvas.decorationsOverviewRuler {
+    display: none !important;
+  }
+
+  .monaco-scrollable-element > .visible {
+    background: #1a203f !important;
+    border-radius: 10px !important;
+  }
+
+  .vs-dark .monaco-scrollable-element > .scrollbar > .slider {
+    background: var(--scrollbar-main-color) !important;
+    border-radius: 10px !important;
+  }
+}
+</style>
+
 <script lang="ts">
 import { Component, Watch, Vue } from "vue-property-decorator";
 import * as mathjs from "mathjs";
+import * as monaco from "monaco-editor";
+import calcLanguage from "@/monaco/calcLang";
+import calcTheme from "@/monaco/calcTheme";
+
+type mEditor = monaco.editor.IStandaloneCodeEditor;
 
 @Component
 export default class App extends Vue {
-  mathInput: string = ``;
+  calcEditor: mEditor | null = null;
+  mathInputs: any[] = [];
   currentTextareaLine: number = 0;
-  roundRegex = new RegExp("^round", "i");
   scrollingTimeout: any = null;
+  scrolling: string | null = null;
   scrollTimeoutDuration = 250;
-  inputTextarea: HTMLTextAreaElement | null = null;
   resultElement: HTMLElement | null = null;
+  editorPlaceholder: HTMLElement | null = null;
+  mathScope: any = {};
 
-  get mathInputs(): any[] {
-    const formattedMathInput = this.mathInput.toLowerCase().replace(",", ".");
-    let mathExpressions = formattedMathInput.split("\n");
-
-    return mathExpressions.map((expression: string) => {
-      expression = expression.trim();
-      let shouldRound = this.roundRegex.test(expression);
-      return {
-        expression: expression.replace(this.roundRegex, "").trim(),
-        round: shouldRound
-      };
-    });
+  get editorInFocus(): boolean {
+    return this.calcEditor ? this.calcEditor.hasTextFocus() : false;
   }
 
   get mathResult(): any[] {
@@ -51,20 +88,9 @@ export default class App extends Vue {
       let result: any = null;
 
       try {
-        result = mathjs.evaluate(input.expression);
+        result = mathjs.evaluate(input.expression, this.mathScope);
         if (new RegExp("^function", "i").test(result)) {
           result = null;
-        } else {
-          if (input.round) {
-            if (result.hasOwnProperty("units")) {
-              let names = result.units.map((item: any) => {
-                return item.unit.name;
-              });
-              result = `${mathjs.round(result.toNumber(), 2)} ${names[0]}`;
-            } else {
-              result = mathjs.round(result, 2);
-            }
-          }
         }
       } catch (err) {}
 
@@ -72,85 +98,174 @@ export default class App extends Vue {
     });
   }
 
-  initScrollListeners() {
-    if (this.inputTextarea && this.resultElement) {
-      this.inputTextarea.removeEventListener(
-        "scroll",
-        this.handleTextareaScroll
-      );
-      this.resultElement.removeEventListener(
-        "scroll",
-        this.handleMathResultScroll
-      );
-      this.inputTextarea.addEventListener("scroll", this.handleTextareaScroll);
+  handleMathResultScroll(event: Event) {
+    if (this.calcEditor && this.resultElement) {
+      if (this.scrolling !== "editor") {
+        this.scrolling = "result";
+        this.calcEditor.setScrollTop(this.resultElement.scrollTop);
+
+        clearTimeout(this.scrollingTimeout);
+        this.scrollingTimeout = setTimeout(() => {
+          this.scrolling = null;
+        }, this.scrollTimeoutDuration);
+      }
+    }
+  }
+
+  parseMathInput(input: string): any[] {
+    const formattedMathInput = input.toLowerCase(); // .replace(",", ".")
+    let mathExpressions = formattedMathInput.split("\n");
+
+    return mathExpressions.map((expression: string) => {
+      expression = expression.trim();
+      return {
+        expression: expression
+      };
+    });
+  }
+
+  mounted() {
+    this.resultElement = document.querySelector(".mathResult");
+
+    const calcEditorContainer = document.getElementById("calcEditor");
+    if (calcEditorContainer) {
+      monaco.languages.register({ id: "customCalcLang" });
+      monaco.languages.setMonarchTokensProvider("customCalcLang", calcLanguage);
+      monaco.editor.defineTheme("customCalcTheme", calcTheme);
+
+      /*
+5 * 7.5415241
+round(5 * 7.5415241)
+round(5 * 7.5415241, 2)
+
+floor(2.324)
+ceil(2.324)
+
+f(x) = x ^ 2 - 5
+f(2)
+f(3)
+
+g(x, y) = x ^ y
+g(2, 3)
+
+a = 3.4
+b = 5 / 2
+a * b
+
+8 * 2
+8.5 / 2
+8 xor 5
+
+12.7 cm to inch
+sin(45 deg)^2
+9 / 3 + 2i
+1.2 * (2 + 4.5)
+cos(45 deg)
+sqrt(-4)
+sqrt(3^2 + 4^2)
+*/
+
+      this.calcEditor = monaco.editor.create(calcEditorContainer, {
+        value: ``,
+        language: "customCalcLang",
+        theme: "customCalcTheme",
+        fontFamily: "Open Sans",
+        fontSize: 16,
+        fontWeight: "bold",
+        lineHeight: 32,
+        scrollBeyondLastLine: false,
+        lineNumbers: "off",
+        glyphMargin: false,
+        folding: false,
+        lineDecorationsWidth: 0,
+        lineNumbersMinChars: 0,
+        minimap: {
+          enabled: false
+        },
+        matchBrackets: false,
+        wordWrap: "on",
+        scrollbar: {
+          vertical: "visible",
+          horizontal: "hidden",
+          useShadows: false,
+          verticalScrollbarSize: 5
+        },
+        find: {
+          addExtraSpaceOnTop: false,
+          autoFindInSelection: false
+        },
+        colorDecorators: false
+      });
+
+      if (this.calcEditor) {
+        this.mathInputs = this.parseMathInput(
+          (this.calcEditor as mEditor).getValue()
+        );
+
+        window.addEventListener("resize", () => {
+          (this.calcEditor as mEditor).layout();
+        });
+
+        this.calcEditor.onDidChangeModelContent(() => {
+          const value = (this.calcEditor as mEditor).getValue();
+          this.mathInputs = this.parseMathInput(value);
+
+          if (this.editorPlaceholder) {
+            if (value && value.length > 0) {
+              this.editorPlaceholder.style.display = "none";
+            } else {
+              this.editorPlaceholder.style.display = "block";
+            }
+          }
+        });
+
+        this.calcEditor.onDidChangeCursorPosition(event => {
+          const lineNumber = event.position.lineNumber;
+          if (this.mathResult[lineNumber - 1] === null) {
+            this.currentTextareaLine = 0;
+          } else {
+            this.currentTextareaLine = event.position.lineNumber;
+          }
+        });
+
+        this.calcEditor.onDidScrollChange(event => {
+          if (this.calcEditor && this.resultElement) {
+            if (this.scrolling !== "result") {
+              this.scrolling = "editor";
+              this.resultElement.scrollTop = event.scrollTop;
+
+              clearTimeout(this.scrollingTimeout);
+              this.scrollingTimeout = setTimeout(() => {
+                if (this.calcEditor && this.resultElement) {
+                  this.resultElement.scrollTop = this.calcEditor.getScrollTop();
+                }
+                this.scrolling = null;
+              }, this.scrollTimeoutDuration);
+              return false;
+            }
+          }
+        });
+
+        this.calcEditor.focus();
+      }
+    }
+
+    if (this.resultElement) {
       this.resultElement.addEventListener(
         "scroll",
         this.handleMathResultScroll
       );
     }
-  }
 
-  handleTextareaCursor(event: Event) {
-    if (event.type === "blur") this.currentTextareaLine = 0;
-    else {
-      this.currentTextareaLine = this.getTextareaLineNumber();
-      if (!this.mathResult[this.currentTextareaLine - 1]) {
-        this.currentTextareaLine = 0;
-      }
-    }
-    this.handleTextareaScroll(event);
-  }
-  handleTextareaScroll(event: Event) {
-    if (this.inputTextarea && this.resultElement) {
-      this.resultElement.removeEventListener(
-        "scroll",
-        this.handleMathResultScroll
-      );
-      this.resultElement.scrollTop = this.inputTextarea.scrollTop;
-
-      clearTimeout(this.scrollingTimeout);
-      this.scrollingTimeout = setTimeout(() => {
-        this.initScrollListeners();
-      }, this.scrollTimeoutDuration);
-      return false;
-    }
-  }
-  handleMathResultScroll(event: Event) {
-    if (this.inputTextarea && this.resultElement) {
-      this.inputTextarea.removeEventListener(
-        "scroll",
-        this.handleTextareaScroll
-      );
-      this.inputTextarea.scrollTop = this.resultElement.scrollTop;
-
-      clearTimeout(this.scrollingTimeout);
-      this.scrollingTimeout = setTimeout(() => {
-        this.initScrollListeners();
-      }, this.scrollTimeoutDuration);
-      return false;
-    }
-  }
-
-  getTextareaLineNumber() {
-    if (this.inputTextarea) {
-      return this.inputTextarea.value
-        .substr(0, this.inputTextarea.selectionStart)
-        .split("\n").length;
-    }
-    return 0;
-  }
-
-  mounted() {
-    this.inputTextarea = document.querySelector("textarea");
-    this.resultElement = document.querySelector(".mathResult");
-
-    if (this.inputTextarea && this.resultElement) {
-      this.inputTextarea.focus();
-      this.inputTextarea.addEventListener("blur", this.handleTextareaCursor);
-      this.inputTextarea.addEventListener("focus", this.handleTextareaCursor);
-      this.inputTextarea.addEventListener("keyup", this.handleTextareaCursor);
-      this.inputTextarea.addEventListener("mouseup", this.handleTextareaCursor);
-      this.initScrollListeners();
+    this.editorPlaceholder = document.querySelector(
+      "#calcEditor > .placeholder"
+    );
+    if (this.editorPlaceholder) {
+      this.editorPlaceholder.addEventListener("click", () => {
+        if (this.calcEditor) {
+          this.calcEditor.focus();
+        }
+      });
     }
   }
 }

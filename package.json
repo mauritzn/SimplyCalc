@@ -1,7 +1,7 @@
 {
   "name": "electron-calc",
-  "description": "A simple calculator using Math.js",
-  "version": "0.1.0",
+  "description": "Calculator built using Math.js",
+  "version": "0.2.0",
   "author": "Mauritz Nilsson <mail@mauritzonline.com>",
   "homepage": "https://mauritzonline.com/",
   "private": true,
@@ -17,7 +17,8 @@
   "main": "background.js",
   "dependencies": {
     "electron-context-menu": "^0.15.1",
-    "mathjs": "^6.2.3",
+    "mathjs": "^6.2.5",
+    "monaco-editor": "^0.18.1",
     "normalize.css": "^8.0.1",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
@@ -27,11 +28,11 @@
     "@types/mathjs": "^6.0.2",
     "@vue/cli-plugin-typescript": "^4.0.0",
     "@vue/cli-service": "^4.0.0",
-    "electron": "^6.0.0",
-    "sass": "^1.19.0",
+    "electron": "^6.1.5",
+    "sass": "^1.23.7",
     "sass-loader": "^8.0.0",
     "typescript": "~3.5.3",
-    "vue-cli-plugin-electron-builder": "^1.4.0",
+    "vue-cli-plugin-electron-builder": "^1.4.2",
     "vue-template-compiler": "^2.6.10"
   }
 }

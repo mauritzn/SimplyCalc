@@ -14,7 +14,7 @@
 
   --weight-regular: 400;
   --weight-bold: 700;
-  --input-lh: 2;
+  --input-lh: 32px;
 
   --size-h1: 2.5rem;
   --size-h2: 2rem;
@@ -60,9 +60,9 @@ body {
   color: var(--placeholder-color) !important;
   font-weight: var(--weight-bold);
 }
-input, textarea, button {
+/* input, textarea, button {
   font-weight: var(--weight-bold);
-}
+} */
 
 h1, h2, h3, h4, h5, h6, p, ul, ol {
   margin-top: 0;
@@ -124,7 +124,7 @@ a:hover {
     height: calc(100vh - 70px);
     padding: 25px;
 
-    textarea,
+    #calcEditor,
     .mathResult {
       position: relative;
       width: 50%;
@@ -154,14 +154,14 @@ a:hover {
       }
     }
 
-    textarea {
+    /* textarea {
       line-height: var(--input-lh);
       border: none;
       background-color: transparent;
       color: var(--input-font-color);
       outline: none;
       resize: none;
-    }
+    } */
 
     .mathResult {
       color: var(--result-font-color);
