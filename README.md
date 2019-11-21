@@ -10,7 +10,8 @@ Supports conversions from different lengths and weights.
 
 **Try it:** https://electron-calc.mauritzonline.com/
 
-![Example 5, GIF](https://cdn.mauritzonline.com/electron_calc/example5.gif)
+![Example 3, GIF](https://cdn.mauritzonline.com/electron_calc/example3.gif)
+![Example 4, GIF](https://cdn.mauritzonline.com/electron_calc/example4.gif)
 
 ---
 
