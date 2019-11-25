@@ -63,6 +63,7 @@ import { Component, Watch, Vue } from "vue-property-decorator";
 import * as mathjs from "mathjs";
 import * as monaco from "monaco-editor";
 import calcLanguage from "@/monaco/calcLang";
+import { completionItemProvider } from "@/monaco/calcLangAutocomplete";
 import calcTheme from "@/monaco/calcTheme";
 
 type mEditor = monaco.editor.IStandaloneCodeEditor;
@@ -140,6 +141,10 @@ export default class App extends Vue {
       monaco.languages.setLanguageConfiguration("customCalcLang", {
         autoClosingPairs: [{ open: "(", close: ")" }]
       });
+      monaco.languages.registerCompletionItemProvider(
+        "customCalcLang",
+        completionItemProvider
+      );
       monaco.editor.defineTheme("customCalcTheme", calcTheme);
 
       /*
