@@ -20,7 +20,7 @@ export default {
 
     "and", "not", "or", "xor",
 
-    "apply", "column", "concat", "cross", "ctranspose", "det", "diag", "dot", "expm", "filter", "flatten", "forEach", "getMatrixDataType", "identity", "inv", "kron", "map", "ones", "partitionSelect", "range", "reshape", "resize", "row", "size", "sort", "sqrtm", "squeeze", "subset", "trace", "transpose", "zeros",
+    "apply", "column", "concat", "cross", "ctranspose", "det", "diag", "dot", "expm", "filter", "flatten", "getMatrixDataType", "identity", "inv", "kron", "map", "ones", "partitionSelect", "range", "reshape", "resize", "row", "size", "sort", "sqrtm", "squeeze", "subset", "trace", "transpose", "zeros",
 
     "combinations", "combinationsWithRep", "factorial", "gamma", "kldivergence", "multinomial", "permutations", "pickRandom", "random", "randomInt",
 
@@ -56,10 +56,10 @@ export default {
   // The main tokenizer for the language
   tokenizer: {
     root: [
-      [/[ ]+(plus|minus|divided|multiply|modulo)[ ]+/, "operator"],
-      [/[ ]+(PLUS|MINUS|DIVIDED|MULTIPLY|MODULO)[ ]+/, "operator"],
+      [/[ ]+(plus|minus|divide|multiply|modulo)[ ]+/, "operator"],
+      [/[ ]+(PLUS|MINUS|DIVIDE|MULTIPLY|MODULO)[ ]+/, "operator"],
       [/[a-z]+[ ]*\(/, "keyword"], // custom functions
-      [/[A-Za-z]+[ ]*=[^=]+/, "keyword"], // custom variables
+      [/[A-Za-z]+[ ]*=/, "keyword"], // custom variables
 
       // identifiers and keywords
       [/[a-z_$][\w$]*/, {
