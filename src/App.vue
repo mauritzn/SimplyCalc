@@ -113,14 +113,14 @@ export default class App extends Vue {
   }
 
   parseMathInput(input: string): any[] {
-    const formattedMathInput = input.toLowerCase(); // .replace(",", ".")
-    let mathExpressions = formattedMathInput.split("\n");
+    //const formattedMathInput = input; //.toLowerCase(); // .replace(",", ".")
+    let mathExpressions = input.split("\n");
 
     return mathExpressions.map((expression: string) => {
       expression = expression.trim();
       expression = expression.replace(/[ ]+(plus|PLUS)[ ]+/g, " + ");
       expression = expression.replace(/[ ]+(minus|MINUS)[ ]+/g, " - ");
-      expression = expression.replace(/[ ]+(divided|DIVIDED)[ ]+/g, " / ");
+      expression = expression.replace(/[ ]+(divide|DIVIDE)[ ]+/g, " / ");
       expression = expression.replace(/[ ]+(multiply|MULTIPLY)[ ]+/g, " * ");
       expression = expression.replace(/[ ]+(modulo|MODULO)[ ]+/g, " % ");
 
