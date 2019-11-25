@@ -131,6 +131,9 @@ export default class App extends Vue {
     if (calcEditorContainer) {
       monaco.languages.register({ id: "customCalcLang" });
       monaco.languages.setMonarchTokensProvider("customCalcLang", calcLanguage);
+      monaco.languages.setLanguageConfiguration("customCalcLang", {
+        autoClosingPairs: [{ open: "(", close: ")" }]
+      });
       monaco.editor.defineTheme("customCalcTheme", calcTheme);
 
       /*
@@ -173,6 +176,7 @@ sqrt(3^2 + 4^2)
         fontSize: 16,
         fontWeight: "bold",
         lineHeight: 32,
+        autoClosingBrackets: "languageDefined",
         scrollBeyondLastLine: false,
         lineNumbers: "off",
         glyphMargin: false,
