@@ -20,7 +20,7 @@ export default {
 
     "and", "not", "or", "xor",
 
-    "apply", "column", "concat", "cross", "ctranspose", "det", "diag", "dot", "expm", "filter", "flatten", "getMatrixDataType", "identity", "inv", "kron", "map", "ones", "partitionSelect", "range", "reshape", "resize", "row", "size", "sort", "sqrtm", "squeeze", "subset", "trace", "transpose", "zeros",
+    "column", "concat", "cross", "ctranspose", "det", "diag", "dot", "expm", "filter", "flatten", "getMatrixDataType", "identity", "inv", "kron", "ones", "partitionSelect", "range", "reshape", "resize", "row", "size", "sort", "sqrtm", "squeeze", "subset", "trace", "transpose", "zeros",
 
     "combinations", "combinationsWithRep", "factorial", "gamma", "kldivergence", "multinomial", "permutations", "pickRandom", "random", "randomInt",
 
@@ -41,7 +41,8 @@ export default {
 
   typeKeywords: [
     "true", "false", "deg", "i",
-    "mm", "cm", "m", "km", "inch", "inches", "feet", "miles"
+    "mm", "cm", "m", "km",
+    "inch", "inches", "feet", "mile", "miles"
   ],
 
   operators: [
@@ -88,7 +89,7 @@ export default {
       [/\d+/, "number"],
 
       // delimiter: after number because of .\d floats
-      [/[;,.]/, "delimiter"],
+      [/[;,. ]/, "delimiter"],
     ],
 
     whitespace: [
