@@ -56,6 +56,8 @@ export default {
   // The main tokenizer for the language
   tokenizer: {
     root: [
+      [/[ ]+(plus|minus|divided|multiply|modulo)[ ]+/, "operator"],
+      [/[ ]+(PLUS|MINUS|DIVIDED|MULTIPLY|MODULO)[ ]+/, "operator"],
       [/[a-z]+[ ]*\(/, "keyword"], // custom functions
       [/[A-Za-z]+[ ]*=[^=]+/, "keyword"], // custom variables
 

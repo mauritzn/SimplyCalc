@@ -31,7 +31,7 @@
     font-weight: var(--weight-bold);
     line-height: var(--input-lh);
     opacity: 0.5;
-    z-index: 100;
+    z-index: 10;
   }
 
   /* .mtkb {
@@ -90,7 +90,7 @@ export default class App extends Vue {
       try {
         result = mathjs.evaluate(input.expression, this.mathScope);
         if (new RegExp("^function", "i").test(result)) {
-          result = null;
+          result = "Function"; // TODO: provide more feedback on what the function is
         }
       } catch (err) {}
 
@@ -118,6 +118,12 @@ export default class App extends Vue {
 
     return mathExpressions.map((expression: string) => {
       expression = expression.trim();
+      expression = expression.replace(/[ ]+(plus|PLUS)[ ]+/g, " + ");
+      expression = expression.replace(/[ ]+(minus|MINUS)[ ]+/g, " - ");
+      expression = expression.replace(/[ ]+(divided|DIVIDED)[ ]+/g, " / ");
+      expression = expression.replace(/[ ]+(multiply|MULTIPLY)[ ]+/g, " * ");
+      expression = expression.replace(/[ ]+(modulo|MODULO)[ ]+/g, " % ");
+
       return {
         expression: expression
       };
