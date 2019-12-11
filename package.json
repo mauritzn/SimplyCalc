@@ -1,7 +1,7 @@
 {
   "name": "electron-calc",
   "description": "Calculator built using Math.js",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Mauritz Nilsson <mail@mauritzonline.com>",
   "homepage": "https://mauritzonline.com/",
   "private": true,
