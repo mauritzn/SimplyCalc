@@ -36,7 +36,7 @@ export default {
 
     "acos", "acosh", "acot", "acoth", "acsc", "acsch", "asec", "asech", "asin", "asinh", "atan", "atan2", "atanh", "cos", "cosh", "cot", "coth", "csc", "csch", "sec", "sech", "sin", "sinh", "tan", "tanh",
 
-    "in"
+    "in", "pi"
   ],
 
   typeKeywords: [
@@ -59,11 +59,11 @@ export default {
     root: [
       [/[ ]+(plus|minus|divide|multiply|modulo)[ ]+/, "operator"],
       [/[ ]+(PLUS|MINUS|DIVIDE|MULTIPLY|MODULO)[ ]+/, "operator"],
-      [/[a-z]+[ ]*\(/, "keyword"], // custom functions
+      [/[A-Za-z]+[ ]*\(/, "keyword"], // custom functions
       [/[A-Za-z]+[ ]*=/, "keyword"], // custom variables
 
       // identifiers and keywords
-      [/[a-z_$][\w$]*/, {
+      [/[A-Za-z_$][\w$]*/, {
         cases: {
           "@typeKeywords": "type",
           "@keywords": "keyword",
