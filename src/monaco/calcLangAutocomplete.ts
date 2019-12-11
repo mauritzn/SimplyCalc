@@ -344,81 +344,73 @@ export const typeKeywords: any[] = [
   {
     label: "true",
     kind: keywordKind,
-    insertText: "true",
-    insertTextRules: insertAsSnippet
+    insertText: "true"
   },
   {
     label: "false",
     kind: keywordKind,
-    insertText: "false",
-    insertTextRules: insertAsSnippet
+    insertText: "false"
   },
   {
     label: "deg",
     kind: keywordKind,
-    insertText: "deg",
-    insertTextRules: insertAsSnippet
+    insertText: "deg"
   },
   {
     label: "i",
     kind: keywordKind,
-    insertText: "i",
-    insertTextRules: insertAsSnippet
+    insertText: "i"
   },
 
   {
     label: "mm",
     kind: keywordKind,
-    insertText: "mm",
-    insertTextRules: insertAsSnippet
+    insertText: "mm"
   },
   {
     label: "cm",
     kind: keywordKind,
-    insertText: "cm",
-    insertTextRules: insertAsSnippet
+    insertText: "cm"
   },
   {
     label: "m",
     kind: keywordKind,
-    insertText: "m",
-    insertTextRules: insertAsSnippet
+    insertText: "m"
   },
   {
     label: "km",
     kind: keywordKind,
-    insertText: "km",
-    insertTextRules: insertAsSnippet
+    insertText: "km"
   },
   {
     label: "inch",
     kind: keywordKind,
-    insertText: "inch",
-    insertTextRules: insertAsSnippet
+    insertText: "inch"
   },
   {
     label: "inches",
     kind: keywordKind,
-    insertText: "inches",
-    insertTextRules: insertAsSnippet
+    insertText: "inches"
   },
   {
     label: "feet",
     kind: keywordKind,
-    insertText: "feet",
-    insertTextRules: insertAsSnippet
+    insertText: "feet"
   },
   {
     label: "mile",
     kind: keywordKind,
-    insertText: "mile",
-    insertTextRules: insertAsSnippet
+    insertText: "mile"
   },
   {
     label: "miles",
     kind: keywordKind,
-    insertText: "miles",
-    insertTextRules: insertAsSnippet
+    insertText: "miles"
+  },
+  {
+    label: "pi",
+    kind: keywordKind,
+    insertText: "pi"
   },
 ];
 
