@@ -22,18 +22,18 @@
     "monaco-editor-webpack-plugin": "^1.7.0",
     "normalize.css": "^8.0.1",
     "vue": "^2.6.10",
-    "vue-class-component": "^7.0.2",
+    "vue-class-component": "^7.1.0",
     "vue-property-decorator": "^8.3.0"
   },
   "devDependencies": {
     "@types/mathjs": "^6.0.2",
-    "@vue/cli-plugin-typescript": "^4.0.0",
-    "@vue/cli-service": "^4.0.0",
-    "electron": "^6.1.5",
+    "@vue/cli-plugin-typescript": "^4.1.1",
+    "@vue/cli-service": "^4.1.1",
+    "electron": "^7.1.4",
     "sass": "^1.23.7",
     "sass-loader": "^8.0.0",
-    "typescript": "~3.5.3",
-    "vue-cli-plugin-electron-builder": "^1.4.2",
+    "typescript": "~3.7.3",
+    "vue-cli-plugin-electron-builder": "^1.4.3",
     "vue-template-compiler": "^2.6.10"
   }
 }
