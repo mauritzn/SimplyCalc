@@ -1,39 +1,30 @@
 {
-  "name": "electron-calc",
+  "name": "simplycalc",
   "description": "Calculator built using Math.js",
   "version": "0.2.2",
   "author": "Mauritz Nilsson <mail@mauritzonline.com>",
   "homepage": "https://mauritzonline.com/",
   "private": true,
   "scripts": {
-    "vue:serve": "vue-cli-service serve",
-    "vue:build": "vue-cli-service build",
-    "build": "vue-cli-service electron:build",
-    "build:win": "vue-cli-service electron:build --win",
-    "serve": "vue-cli-service electron:serve",
-    "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
   },
-  "main": "background.js",
   "dependencies": {
-    "electron-context-menu": "^0.16.0",
     "mathjs": "^6.6.0",
     "monaco-editor": "^0.20.0",
     "monaco-editor-webpack-plugin": "^1.9.0",
     "normalize.css": "^8.0.1",
     "vue": "^2.6.11",
-    "vue-class-component": "^7.2.3",
-    "vue-property-decorator": "^8.4.0"
+    "vue-class-component": "^7.2.2",
+    "vue-property-decorator": "^8.3.0"
   },
   "devDependencies": {
     "@types/mathjs": "^6.0.4",
-    "@vue/cli-plugin-typescript": "^4.2.2",
-    "@vue/cli-service": "^4.2.2",
-    "electron": "^8.0.1",
+    "@vue/cli-plugin-typescript": "~4.2.0",
+    "@vue/cli-service": "~4.2.0",
     "sass": "^1.25.0",
     "sass-loader": "^8.0.2",
-    "typescript": "~3.8.2",
-    "vue-cli-plugin-electron-builder": "^1.4.5",
+    "typescript": "~3.7.5",
     "vue-template-compiler": "^2.6.11"
   }
 }

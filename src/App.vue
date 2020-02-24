@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header>
-      <h1>Electron Calc</h1>
+      <h1>SimplyCalc</h1>
     </header>
 
     <div class="container">

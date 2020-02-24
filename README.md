@@ -1,4 +1,4 @@
-# electron-calc
+# SimplyCalc
 
 Calculator built using Math.js, inspired by [Caligator](https://github.com/sarthology/caligator).
 
