@@ -93,6 +93,12 @@ export default class App extends Vue {
         if (new RegExp("^function", "i").test(result)) {
           result = "Function"; // TODO: provide more feedback on what the function is
         }
+
+        // Adds comments to result
+        if (new RegExp("[ ]*#.*?$", "i").test(input.expression)) {
+          const match = new RegExp("[ ]*#.*?$", "i").exec(input.expression);
+          result = `${result ? result : ""}${match ? match : ""}`;
+        }
       } catch (err) {}
 
       return result !== null && result !== undefined ? result : null;
@@ -197,7 +203,7 @@ sqrt(3^2 + 4^2)
         minimap: {
           enabled: false
         },
-        matchBrackets: false,
+        matchBrackets: "never",
         wordWrap: "on",
         scrollbar: {
           vertical: "visible",
@@ -207,7 +213,7 @@ sqrt(3^2 + 4^2)
         },
         find: {
           addExtraSpaceOnTop: false,
-          autoFindInSelection: false
+          autoFindInSelection: "never"
         },
         colorDecorators: false
       });
