@@ -13,10 +13,10 @@ Supports conversions from different lengths and weights.
 
 -----
 
-**Try it:** https://electron-calc.mauritzonline.com/
+**Try it:** https://simply.mauritzonline.com/
 
-![Example 3, GIF](https://cdn.mauritzonline.com/electron_calc/example_3.gif)
-![Example 4, GIF](https://cdn.mauritzonline.com/electron_calc/example_4.gif)
+![Example 3, GIF](https://cdn.mauritzonline.com/simplycalc/example_3.gif)
+![Example 4, GIF](https://cdn.mauritzonline.com/simplycalc/example_4.gif)
 
 ---
 
