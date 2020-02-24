@@ -16,24 +16,24 @@
   },
   "main": "background.js",
   "dependencies": {
-    "electron-context-menu": "^0.15.1",
-    "mathjs": "^6.2.5",
-    "monaco-editor": "^0.18.1",
-    "monaco-editor-webpack-plugin": "^1.7.0",
+    "electron-context-menu": "^0.16.0",
+    "mathjs": "^6.6.0",
+    "monaco-editor": "^0.20.0",
+    "monaco-editor-webpack-plugin": "^1.9.0",
     "normalize.css": "^8.0.1",
-    "vue": "^2.6.10",
-    "vue-class-component": "^7.1.0",
-    "vue-property-decorator": "^8.3.0"
+    "vue": "^2.6.11",
+    "vue-class-component": "^7.2.3",
+    "vue-property-decorator": "^8.4.0"
   },
   "devDependencies": {
-    "@types/mathjs": "^6.0.2",
-    "@vue/cli-plugin-typescript": "^4.1.1",
-    "@vue/cli-service": "^4.1.1",
-    "electron": "^7.1.4",
-    "sass": "^1.23.7",
-    "sass-loader": "^8.0.0",
-    "typescript": "~3.7.3",
-    "vue-cli-plugin-electron-builder": "^1.4.3",
-    "vue-template-compiler": "^2.6.10"
+    "@types/mathjs": "^6.0.4",
+    "@vue/cli-plugin-typescript": "^4.2.2",
+    "@vue/cli-service": "^4.2.2",
+    "electron": "^8.0.1",
+    "sass": "^1.25.0",
+    "sass-loader": "^8.0.2",
+    "typescript": "~3.8.2",
+    "vue-cli-plugin-electron-builder": "^1.4.5",
+    "vue-template-compiler": "^2.6.11"
   }
 }
