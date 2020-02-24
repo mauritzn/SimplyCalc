@@ -154,6 +154,10 @@ a:hover {
       }
     }
 
+    #calcEditor {
+      overflow-y: hidden;
+    }
+
     /* textarea {
       line-height: var(--input-lh);
       border: none;
