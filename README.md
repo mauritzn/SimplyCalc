@@ -8,6 +8,11 @@ Supports conversions from different lengths and weights.
 
 -----
 
+> Starting with version **0.3.0** the project will be removing Electron and focusing 100% on the web version of the calculator. If in the future enough demand for an Electron app exists, then a simple Electron wrapper will be created.
+> *Due to this change the project will be renamed.*
+
+-----
+
 **Try it:** https://electron-calc.mauritzonline.com/
 
 ![Example 3, GIF](https://cdn.mauritzonline.com/electron_calc/example_3.gif)
