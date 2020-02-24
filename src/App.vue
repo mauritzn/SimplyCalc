@@ -68,6 +68,10 @@ import calcTheme from "@/monaco/calcTheme";
 
 type mEditor = monaco.editor.IStandaloneCodeEditor;
 
+function formatNumber(toFormat: number, separator = ",") {
+  return toFormat.toString().replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+}
+
 @Component
 export default class App extends Vue {
   calcEditor: mEditor | null = null;
@@ -91,13 +95,43 @@ export default class App extends Vue {
       try {
         result = mathjs.evaluate(input.expression, this.mathScope);
         if (new RegExp("^function", "i").test(result)) {
-          result = "Function"; // TODO: provide more feedback on what the function is
+          if (
+            new RegExp("^[ ]*([A-Za-z]+[ ]*(.*?))[ ]*=", "i").test(
+              input.expression
+            )
+          ) {
+            const match = new RegExp(
+              "^[ ]*([A-Za-z]+[ ]*(.*?))[ ]*=",
+              "i"
+            ).exec(input.expression);
+            if (match) {
+              result = match[1];
+            }
+          } else {
+            result = "Function";
+          }
         }
 
-        // Adds comments to result
+        // Add comments to result
         if (new RegExp("[ ]*#.*?$", "i").test(input.expression)) {
           const match = new RegExp("[ ]*#.*?$", "i").exec(input.expression);
           result = `${result ? result : ""}${match ? match : ""}`;
+        }
+
+        // Add number grouping to result
+        if (
+          new RegExp("[0-9]+", "i").test(result) &&
+          !new RegExp("^[ ]*#.*?$", "i").test(result)
+        ) {
+          if (Number.isInteger(result)) {
+            result = formatNumber(result);
+          } else {
+            const match = new RegExp("[0-9]+", "i").exec(result);
+            if (match && result) {
+              const formattedNumber = formatNumber(Number(match[0]));
+              result = result.toString().replace(match[0], formattedNumber);
+            }
+          }
         }
       } catch (err) {}
 
