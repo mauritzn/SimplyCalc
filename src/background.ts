@@ -7,6 +7,7 @@ import {
 } from "vue-cli-plugin-electron-builder/lib";
 import contextMenu from "electron-context-menu";
 const isDevelopment = process.env.NODE_ENV !== "production";
+app.allowRendererProcessReuse = true;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
