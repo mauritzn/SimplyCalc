@@ -10,21 +10,21 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "mathjs": "^6.6.4",
+    "mathjs": "^7.1.0",
     "monaco-editor": "^0.20.0",
     "monaco-editor-webpack-plugin": "^1.9.0",
     "normalize.css": "^8.0.1",
     "vue": "^2.6.11",
-    "vue-class-component": "^7.2.3",
-    "vue-property-decorator": "^8.4.2"
+    "vue-class-component": "^7.2.5",
+    "vue-property-decorator": "^9.0.0"
   },
   "devDependencies": {
     "@types/mathjs": "^6.0.5",
-    "@vue/cli-plugin-typescript": "^4.3.1",
-    "@vue/cli-service": "^4.3.1",
-    "sass": "^1.26.5",
-    "sass-loader": "^8.0.2",
-    "typescript": "~3.8.3",
+    "@vue/cli-plugin-typescript": "^4.4.6",
+    "@vue/cli-service": "^4.4.6",
+    "sass": "^1.26.10",
+    "sass-loader": "^9.0.2",
+    "typescript": "~3.9.7",
     "vue-template-compiler": "^2.6.11"
   }
 }
