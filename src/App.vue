@@ -17,7 +17,8 @@
           v-for="(result, index) in mathResult"
           :key="index"
           :class="((currentTextareaLine - 1) === index ? 'active' : '')"
-        >{{ (result !== null ? result : "") }}</p>
+          v-html="(result !== null ? result : '')"
+        ></p>
       </div>
     </div>
   </div>
@@ -115,7 +116,9 @@ export default class App extends Vue {
         // Add comments to result
         if (new RegExp("[ ]*#.*?$", "i").test(input.expression)) {
           const match = new RegExp("[ ]*#.*?$", "i").exec(input.expression);
-          result = `${result ? result : ""}${match ? match : ""}`;
+          result = `${result ? result : ""} <span>${
+            match ? match[0] : ""
+          }</span>`;
         }
 
         // Add number grouping to result
@@ -166,7 +169,7 @@ export default class App extends Vue {
       expression = expression.replace(/[ ]+(modulo|MODULO)[ ]+/g, " % ");
 
       return {
-        expression: expression
+        expression: expression,
       };
     });
   }
@@ -179,7 +182,7 @@ export default class App extends Vue {
       monaco.languages.register({ id: "customCalcLang" });
       monaco.languages.setMonarchTokensProvider("customCalcLang", calcLanguage);
       monaco.languages.setLanguageConfiguration("customCalcLang", {
-        autoClosingPairs: [{ open: "(", close: ")" }]
+        autoClosingPairs: [{ open: "(", close: ")" }],
       });
       monaco.languages.registerCompletionItemProvider(
         "customCalcLang",
@@ -235,7 +238,7 @@ sqrt(3^2 + 4^2)
         lineDecorationsWidth: 0,
         lineNumbersMinChars: 0,
         minimap: {
-          enabled: false
+          enabled: false,
         },
         matchBrackets: "never",
         wordWrap: "on",
@@ -243,13 +246,13 @@ sqrt(3^2 + 4^2)
           vertical: "visible",
           horizontal: "hidden",
           useShadows: false,
-          verticalScrollbarSize: 5
+          verticalScrollbarSize: 5,
         },
         find: {
           addExtraSpaceOnTop: false,
-          autoFindInSelection: "never"
+          autoFindInSelection: "never",
         },
-        colorDecorators: false
+        colorDecorators: false,
       });
 
       if (this.calcEditor) {
@@ -274,7 +277,7 @@ sqrt(3^2 + 4^2)
           }
         });
 
-        this.calcEditor.onDidChangeCursorPosition(event => {
+        this.calcEditor.onDidChangeCursorPosition((event) => {
           const lineNumber = event.position.lineNumber;
           if (this.mathResult[lineNumber - 1] === null) {
             this.currentTextareaLine = 0;
@@ -283,7 +286,7 @@ sqrt(3^2 + 4^2)
           }
         });
 
-        this.calcEditor.onDidScrollChange(event => {
+        this.calcEditor.onDidScrollChange((event) => {
           if (this.calcEditor && this.resultElement) {
             if (this.scrolling !== "result") {
               this.scrolling = "editor";

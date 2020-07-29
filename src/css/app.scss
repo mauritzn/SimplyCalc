@@ -189,6 +189,10 @@ a:hover {
         &:empty:before {
           content: "\200b"; /* unicode zero width space character */
         }
+
+        span {
+          color: #608b4e;
+        }
       }
     }
 
