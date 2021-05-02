@@ -10,7 +10,7 @@ export default {
     { token: "keyword", foreground: "00ff75" },
     { token: "type", foreground: "44dcc1" },
     { token: "delimiter", foreground: "00ff76" },
-    { token: "number", foreground: "ffd631" }
+    { token: "number", foreground: "ffd631" },
   ],
   colors: {
     "editor.foreground": "#ffd631",
@@ -29,6 +29,6 @@ export default {
 
     "scrollbarSlider.background": "#1a203f",
     "scrollbarSlider.hoverBackground": "#38427c",
-    "scrollbarSlider.activeBackground": "#38427c"
-  }
+    "scrollbarSlider.activeBackground": "#38427c",
+  },
 } as monaco.editor.IStandaloneThemeData;

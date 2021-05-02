@@ -36,7 +36,7 @@ export default {
 
     "acos", "acosh", "acot", "acoth", "acsc", "acsch", "asec", "asech", "asin", "asinh", "atan", "atan2", "atanh", "cos", "cosh", "cot", "coth", "csc", "csch", "sec", "sech", "sin", "sinh", "tan", "tanh",
 
-    "in", "pi"
+    "in", "to", "pi"
   ],
 
   typeKeywords: [

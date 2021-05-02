@@ -20,6 +20,5 @@ yarn-error.log*
 *.sln
 *.sw?
 
-#Electron-builder output
-/dist_electron
 _test_expressions.txt
+_test_number_grouping.txt
