@@ -79,10 +79,12 @@ export default class MathResultHandler {
     let resultLines = document.querySelectorAll(`.mathResult p[key]`);
     if (resultLines.length > 0) {
       if (resultLines.length < newValue.length) {
+        // add placeholder result lines if there are too few lines
         for (let i = 0; i < newValue.length - resultLines.length; i++) {
           this.addPlaceholderResultLine();
         }
       } else if (resultLines.length > newValue.length) {
+        // remove unneeded result lines
         for (let i = resultLines.length - 1; i >= newValue.length; i--) {
           resultLines[i].remove();
         }
@@ -94,6 +96,7 @@ export default class MathResultHandler {
         const newResult = newValue[key];
         const attrKey = resultLine.getAttribute("key");
 
+        // fix incorrect keys and change "placeholder" keys
         if (Number(attrKey) !== key) {
           resultLine.setAttribute("key", String(key));
         }
@@ -103,6 +106,7 @@ export default class MathResultHandler {
         }
       });
     } else {
+      // nothing to check, simply add results
       newValue.map((value, key) => {
         this.addResultLine(key + 1, value);
       });
