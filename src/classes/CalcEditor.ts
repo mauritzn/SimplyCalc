@@ -1,11 +1,14 @@
-import * as monaco from "monaco-editor";
+import {
+  languages as monacoLanguages,
+  editor as monacoEditor,
+} from "monaco-editor";
 import MathResultHandler from "./MathResultHandler";
 import calcLanguage from "../monaco/calcLang";
 import { completionItemProvider } from "../monaco/calcLangAutocomplete";
 import calcTheme from "../monaco/calcTheme";
 import monacoOptions from "../config/monacoOptions";
 
-type mEditor = monaco.editor.IStandaloneCodeEditor;
+type mEditor = monacoEditor.IStandaloneCodeEditor;
 
 export default class CalcEditor {
   public calcEditor: mEditor | null = null;
@@ -54,21 +57,18 @@ export default class CalcEditor {
       "#calcEditor"
     ) as HTMLElement | null;
     if (calcEditorContainer) {
-      monaco.languages.register({ id: "customCalcLang" });
-      monaco.languages.setMonarchTokensProvider("customCalcLang", calcLanguage);
-      monaco.languages.setLanguageConfiguration("customCalcLang", {
+      monacoLanguages.register({ id: "customCalcLang" });
+      monacoLanguages.setMonarchTokensProvider("customCalcLang", calcLanguage);
+      monacoLanguages.setLanguageConfiguration("customCalcLang", {
         autoClosingPairs: [{ open: "(", close: ")" }],
       });
-      monaco.languages.registerCompletionItemProvider(
+      monacoLanguages.registerCompletionItemProvider(
         "customCalcLang",
         completionItemProvider
       );
-      monaco.editor.defineTheme("customCalcTheme", calcTheme);
+      monacoEditor.defineTheme("customCalcTheme", calcTheme);
 
-      this.calcEditor = monaco.editor.create(
-        calcEditorContainer,
-        monacoOptions
-      );
+      this.calcEditor = monacoEditor.create(calcEditorContainer, monacoOptions);
       if (this.calcEditor) {
         this.mathInputs = this.parseMathInput(
           (this.calcEditor as mEditor).getValue()

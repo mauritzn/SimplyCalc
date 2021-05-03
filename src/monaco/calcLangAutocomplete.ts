@@ -1,17 +1,21 @@
-import * as monaco from "monaco-editor";
+import {
+  languages as monacoLanguages,
+  editor as monacoEditor,
+  Position as monacoPosition,
+} from "monaco-editor";
 
-type ITextModel = monaco.editor.ITextModel;
-type Position = monaco.Position;
-type CompletionList = monaco.languages.CompletionList;
-type ProviderResult<T> = monaco.languages.ProviderResult<T>;
-type CompletionItem = monaco.languages.CompletionItem;
-type CompletionItemProvider = monaco.languages.CompletionItemProvider;
+type ITextModel = monacoEditor.ITextModel;
+type Position = monacoPosition;
+type CompletionList = monacoLanguages.CompletionList;
+type ProviderResult<T> = monacoLanguages.ProviderResult<T>;
+type CompletionItem = monacoLanguages.CompletionItem;
+type CompletionItemProvider = monacoLanguages.CompletionItemProvider;
 
 const insertAsSnippet =
-  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet;
-const functionKind = monaco.languages.CompletionItemKind.Function;
-const keywordKind = monaco.languages.CompletionItemKind.Keyword;
-const operatorKind = monaco.languages.CompletionItemKind.Operator;
+  monacoLanguages.CompletionItemInsertTextRule.InsertAsSnippet;
+const functionKind = monacoLanguages.CompletionItemKind.Function;
+const keywordKind = monacoLanguages.CompletionItemKind.Keyword;
+const operatorKind = monacoLanguages.CompletionItemKind.Operator;
 
 export const functions: any[] = [
   {

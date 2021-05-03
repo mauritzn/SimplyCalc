@@ -1,4 +1,4 @@
-import * as monaco from "monaco-editor";
+import { editor as monacoEditor } from "monaco-editor";
 
 export default {
   value: ``,
@@ -31,4 +31,4 @@ export default {
     autoFindInSelection: "never",
   },
   colorDecorators: false,
-} as monaco.editor.IStandaloneEditorConstructionOptions;
+} as monacoEditor.IStandaloneEditorConstructionOptions;

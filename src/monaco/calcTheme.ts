@@ -1,4 +1,4 @@
-import * as monaco from "monaco-editor";
+import { editor as monacoEditor } from "monaco-editor";
 
 export default {
   base: "vs-dark",
@@ -31,4 +31,4 @@ export default {
     "scrollbarSlider.hoverBackground": "#38427c",
     "scrollbarSlider.activeBackground": "#38427c",
   },
-} as monaco.editor.IStandaloneThemeData;
+} as monacoEditor.IStandaloneThemeData;

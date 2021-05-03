@@ -1,4 +1,4 @@
-import * as monaco from "monaco-editor";
+import { languages as monacoLanguages } from "monaco-editor";
 
 export default {
   // Set defaultToken to invalid to see what isn't tokenized yet
@@ -97,4 +97,4 @@ export default {
       [/[ \t\r\n]+/, "white"],
     ],
   },
-} as monaco.languages.IMonarchLanguage;
+} as monacoLanguages.IMonarchLanguage;
