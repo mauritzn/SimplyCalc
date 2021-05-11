@@ -7,6 +7,11 @@
 
     <title><%= htmlWebpackPlugin.options.title %></title>
 
+    <meta
+      name="description"
+      content="Calculator built using Math.js. Supports custom functions and variables. Also supports most of the functions that Mathjs has."
+    />
+
     <!-- Plausible Analytics -->
     <script
       async
@@ -36,6 +41,7 @@
       </header>
 
       <div class="container">
+        <label for="calcEditorTextarea">Editor</label>
         <div id="calcEditor"></div>
 
         <div class="separator"></div>

@@ -70,6 +70,9 @@ export default class CalcEditor {
       behavioursEnabled: true, // auto closing brackets, etc.
     });
 
+    let aceTextarea = this.calcEditor.container.querySelector("textarea");
+    if (aceTextarea) aceTextarea.id = "calcEditorTextarea";
+
     // https://github.com/ajaxorg/ace/blob/ca4148/lib/ace/commands/default_commands.js
     this.calcEditor.commands.removeCommand("showSettingsMenu");
     this.calcEditor.commands.removeCommand("goToNextError");

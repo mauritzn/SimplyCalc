@@ -1,3 +1,9 @@
+label[for="calcEditorTextarea"] {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
 #calcEditor {
   > .placeholder {
     position: absolute;
@@ -44,7 +50,7 @@
       font-weight: var(--weight-bold);
       line-height: var(--input-lh);
       color: var(--main-font-color);
-      opacity: 0.5;
+      opacity: 0.7;
       margin: 0;
       transform: none;
       z-index: 10;
