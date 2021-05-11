@@ -1,14 +1,10 @@
 // https://github.com/ajaxorg/ace/blob/master/demo/webpack/demo.js
 // https://github.com/ajaxorg/ace/blob/ca4148/lib/ace/commands/default_commands.js
-import ace, { Ace } from "ace-builds";
-import "ace-builds/src-noconflict/ext-searchbox";
-//import "ace-builds/src-noconflict/ext-settings_menu";
-//import "ace-builds/webpack-resolver";
-import "../config/aceMode";
+import { AceEditor } from "./AceEditor";
 import MathResultHandler from "./MathResultHandler";
 
 export default class CalcEditor {
-  public calcEditor: Ace.Editor;
+  public calcEditor: AceEditor;
 
   public scrollingTimeout: any = null;
   public scrolling: string | null = null;
@@ -50,45 +46,7 @@ export default class CalcEditor {
     this.resultContainer = document.querySelector(".mathResult");
     this.mathResultHandler = new MathResultHandler(this.resultContainer);
 
-    this.calcEditor = ace.edit("calcEditor", {
-      placeholder: "Math goes here",
-      value: "",
-      fontFamily: "Ubuntu Mono",
-      fontSize: 18,
-      tabSize: 2,
-      mode: "ace/mode/custom",
-      printMargin: false,
-      displayIndentGuides: false,
-      showFoldWidgets: false,
-      showLineNumbers: false,
-      showGutter: false,
-      showPrintMargin: false,
-      showInvisibles: false,
-      highlightGutterLine: false,
-      highlightActiveLine: false,
-      enableAutoIndent: false,
-      behavioursEnabled: true, // auto closing brackets, etc.
-    });
-
-    let aceTextarea = this.calcEditor.container.querySelector("textarea");
-    if (aceTextarea) aceTextarea.id = "calcEditorTextarea";
-
-    // https://github.com/ajaxorg/ace/blob/ca4148/lib/ace/commands/default_commands.js
-    this.calcEditor.commands.removeCommand("showSettingsMenu");
-    this.calcEditor.commands.removeCommand("goToNextError");
-    this.calcEditor.commands.removeCommand("goToPreviousError");
-    this.calcEditor.commands.removeCommand("gotoline");
-    this.calcEditor.commands.removeCommand("fold");
-    this.calcEditor.commands.removeCommand("unfold");
-    this.calcEditor.commands.removeCommand("toggleFoldWidget");
-    this.calcEditor.commands.removeCommand("toggleParentFoldWidget");
-    this.calcEditor.commands.removeCommand("foldall");
-    this.calcEditor.commands.removeCommand("foldOther");
-    this.calcEditor.commands.removeCommand("unfoldall");
-    this.calcEditor.commands.removeCommand("sortlines");
-    this.calcEditor.commands.removeCommand("togglecomment");
-    this.calcEditor.commands.removeCommand("toggleBlockComment");
-
+    this.calcEditor = new AceEditor("calcEditor", false);
     this.calcEditor.focus();
 
     this.calcEditor.on("change", (event) => {
@@ -97,7 +55,7 @@ export default class CalcEditor {
       this.mathInputs = this.parseMathInput(value);
     });
 
-    (this.calcEditor as any).on("changeSelection", () => {
+    this.calcEditor.on("changeSelection", () => {
       this.setCurrentTextAreaLine();
     });
 
@@ -189,7 +147,8 @@ export default class CalcEditor {
       // check if expression contains list (e.g. [1,2,3])
       if (!new RegExp("\\[.*?\\]").test(expression)) {
         // TODO: implement a more complex parser of number grouping,
-        // since this currently ignores any line with a list in it(e.g. "[1,2,3] + 2,000", get ignored)
+        // since this currently ignores any line with a list in it (e.g. "[1,2,3] + 2,000", get ignored)
+        // and the current one also incorrectly parses function arguments (e.g. test(12,345))
 
         //console.log("ran number grouping replace!", expression);
         expression = expression.replace(
