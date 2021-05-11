@@ -1,7 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const MonacoEditorPlugin = require("monaco-editor-webpack-plugin");
 const CleanTerminalPlugin = require("clean-terminal-webpack-plugin");
 
 const webpackMode =
@@ -79,9 +78,6 @@ module.exports = {
       // both options are optional
       filename: "[name]-[contenthash].css",
       chunkFilename: "chunk-[chunkhash].css",
-    }),
-    new MonacoEditorPlugin({
-      languages: ["markdown"],
     }),
   ],
 };

@@ -1,6 +1,4 @@
 import "./css/app.scss";
-//import CalcEditor from "./classes/CalcEditor";
-import CalcEditorAce from "./classes/CalcEditorAce";
+import CalcEditor from "./classes/CalcEditor";
 
-//new CalcEditor();
-new CalcEditorAce();
+new CalcEditor();

@@ -96,26 +96,4 @@
       }
     }
   }
-
-  /* .mtkb {
-    padding: 0 5px;
-  } */
-
-  .view-lines {
-    letter-spacing: 0.1rem !important;
-  }
-
-  canvas.decorationsOverviewRuler {
-    display: none !important;
-  }
-
-  .monaco-scrollable-element > .visible {
-    background: #1a203f !important;
-    border-radius: 10px !important;
-  }
-
-  .vs-dark .monaco-scrollable-element > .scrollbar > .slider {
-    background: var(--scrollbar-main-color) !important;
-    border-radius: 10px !important;
-  }
 }

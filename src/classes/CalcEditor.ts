@@ -1,24 +1,21 @@
-import {
-  languages as monacoLanguages,
-  editor as monacoEditor,
-} from "monaco-editor";
+// https://github.com/ajaxorg/ace/blob/master/demo/webpack/demo.js
+// https://github.com/ajaxorg/ace/blob/ca4148/lib/ace/commands/default_commands.js
+import ace, { Ace } from "ace-builds";
+import "ace-builds/src-noconflict/ext-searchbox";
+//import "ace-builds/src-noconflict/ext-settings_menu";
+//import "ace-builds/webpack-resolver";
+import "../config/aceMode";
 import MathResultHandler from "./MathResultHandler";
-import calcLanguage from "../monaco/calcLang";
-import { completionItemProvider } from "../monaco/calcLangAutocomplete";
-import calcTheme from "../monaco/calcTheme";
-import monacoOptions from "../config/monacoOptions";
-
-type mEditor = monacoEditor.IStandaloneCodeEditor;
 
 export default class CalcEditor {
-  public calcEditor: mEditor | null = null;
+  public calcEditor: Ace.Editor;
 
   public scrollingTimeout: any = null;
   public scrolling: string | null = null;
   public scrollTimeoutDuration = 250;
 
   public resultContainer: HTMLElement | null = null;
-  public editorPlaceholder: HTMLElement | null = null;
+  //public editorPlaceholder: HTMLElement | null = null;
 
   public mathResultHandler: MathResultHandler;
 
@@ -53,105 +50,118 @@ export default class CalcEditor {
     this.resultContainer = document.querySelector(".mathResult");
     this.mathResultHandler = new MathResultHandler(this.resultContainer);
 
-    const calcEditorContainer = document.querySelector(
-      "#calcEditor"
-    ) as HTMLElement | null;
-    if (calcEditorContainer) {
-      monacoLanguages.register({ id: "customCalcLang" });
-      monacoLanguages.setMonarchTokensProvider("customCalcLang", calcLanguage);
-      monacoLanguages.setLanguageConfiguration("customCalcLang", {
-        autoClosingPairs: [{ open: "(", close: ")" }],
-      });
-      monacoLanguages.registerCompletionItemProvider(
-        "customCalcLang",
-        completionItemProvider
-      );
-      monacoEditor.defineTheme("customCalcTheme", calcTheme);
+    this.calcEditor = ace.edit("calcEditor", {
+      placeholder: "Math goes here",
+      value: "",
+      fontFamily: "Ubuntu Mono",
+      fontSize: 18,
+      tabSize: 2,
+      mode: "ace/mode/custom",
+      printMargin: false,
+      displayIndentGuides: false,
+      showFoldWidgets: false,
+      showLineNumbers: false,
+      showGutter: false,
+      showPrintMargin: false,
+      showInvisibles: false,
+      highlightGutterLine: false,
+      highlightActiveLine: false,
+      enableAutoIndent: false,
+      behavioursEnabled: true, // auto closing brackets, etc.
+    });
 
-      this.calcEditor = monacoEditor.create(calcEditorContainer, monacoOptions);
-      if (this.calcEditor) {
-        this.mathInputs = this.parseMathInput(
-          (this.calcEditor as mEditor).getValue()
-        );
+    // https://github.com/ajaxorg/ace/blob/ca4148/lib/ace/commands/default_commands.js
+    this.calcEditor.commands.removeCommand("showSettingsMenu");
+    this.calcEditor.commands.removeCommand("goToNextError");
+    this.calcEditor.commands.removeCommand("goToPreviousError");
+    this.calcEditor.commands.removeCommand("gotoline");
+    this.calcEditor.commands.removeCommand("fold");
+    this.calcEditor.commands.removeCommand("unfold");
+    this.calcEditor.commands.removeCommand("toggleFoldWidget");
+    this.calcEditor.commands.removeCommand("toggleParentFoldWidget");
+    this.calcEditor.commands.removeCommand("foldall");
+    this.calcEditor.commands.removeCommand("foldOther");
+    this.calcEditor.commands.removeCommand("unfoldall");
+    this.calcEditor.commands.removeCommand("sortlines");
+    this.calcEditor.commands.removeCommand("togglecomment");
+    this.calcEditor.commands.removeCommand("toggleBlockComment");
 
-        window.addEventListener("resize", () => {
-          (this.calcEditor as mEditor).layout();
-        });
+    this.calcEditor.focus();
 
-        this.calcEditor.onDidChangeModelContent(() => {
-          const value = (this.calcEditor as mEditor).getValue();
-          this.mathInputs = this.parseMathInput(value);
+    this.calcEditor.on("change", (event) => {
+      //console.log(event);
+      const value = this.calcEditor.getValue();
+      this.mathInputs = this.parseMathInput(value);
+    });
 
-          if (this.editorPlaceholder) {
-            if (value && value.length > 0) {
-              this.editorPlaceholder.style.display = "none";
-            } else {
-              this.editorPlaceholder.style.display = "block";
+    (this.calcEditor as any).on("changeSelection", () => {
+      this.setCurrentTextAreaLine();
+    });
+
+    this.calcEditor.on("blur", () => {
+      this.currentTextareaLine = 0;
+    });
+    this.calcEditor.on("focus", () => {
+      this.setCurrentTextAreaLine();
+    });
+
+    this.calcEditor.getSession().on("changeScrollTop", (scrollTop) => {
+      if (this.calcEditor && this.resultContainer) {
+        if (this.scrolling !== "result") {
+          this.scrolling = "editor";
+          this.resultContainer.scrollTop = scrollTop;
+
+          clearTimeout(this.scrollingTimeout);
+          this.scrollingTimeout = setTimeout(() => {
+            if (this.calcEditor && this.resultContainer) {
+              this.resultContainer.scrollTop = this.calcEditor
+                .getSession()
+                .getScrollTop();
             }
-          }
-        });
-
-        this.calcEditor.onDidChangeCursorPosition((event) => {
-          //console.log("cursor change");
-          const lineNumber = event.position.lineNumber;
-          if (this.mathResultHandler.isResultLineEmpty(lineNumber)) {
-            this.currentTextareaLine = 0;
-          } else {
-            this.currentTextareaLine = event.position.lineNumber;
-          }
-        });
-
-        this.calcEditor.onDidScrollChange((event) => {
-          if (this.calcEditor && this.resultContainer) {
-            if (this.scrolling !== "result") {
-              this.scrolling = "editor";
-              this.resultContainer.scrollTop = event.scrollTop;
-
-              clearTimeout(this.scrollingTimeout);
-              this.scrollingTimeout = setTimeout(() => {
-                if (this.calcEditor && this.resultContainer) {
-                  this.resultContainer.scrollTop = this.calcEditor.getScrollTop();
-                }
-                this.scrolling = null;
-              }, this.scrollTimeoutDuration);
-              return false;
-            }
-          }
-          return;
-        });
-
-        this.calcEditor.focus();
+            this.scrolling = null;
+          }, this.scrollTimeoutDuration);
+          return false;
+        }
       }
-    }
+    });
 
     if (this.resultContainer) {
-      this.resultContainer.addEventListener(
-        "scroll",
-        this.handleMathResultScroll
+      this.resultContainer.addEventListener("scroll", () =>
+        this.handleMathResultScroll()
       );
-    }
-
-    this.editorPlaceholder = document.querySelector(
-      "#calcEditor > .placeholder"
-    );
-    if (this.editorPlaceholder) {
-      this.editorPlaceholder.addEventListener("click", () => {
-        if (this.calcEditor) {
-          this.calcEditor.focus();
-        }
-      });
     }
   }
 
   get editorInFocus(): boolean {
-    return this.calcEditor ? this.calcEditor.hasTextFocus() : false;
+    return this.calcEditor ? this.calcEditor.isFocused() : false;
+  }
+
+  setCurrentTextAreaLine() {
+    if (this.calcEditor) {
+      const currentSelection = this.calcEditor.getSelectionRange();
+      const startRow = currentSelection.start.row;
+      const endRow = currentSelection.end.row;
+      //console.log(currentSelection.start.row, currentSelection.end.row);
+
+      if (startRow !== endRow) {
+        this.currentTextareaLine = 0;
+      } else {
+        if (this.mathResultHandler.isResultLineEmpty(startRow + 1)) {
+          this.currentTextareaLine = 0;
+        } else {
+          this.currentTextareaLine = startRow + 1;
+        }
+      }
+    }
   }
 
   handleMathResultScroll(): void {
     if (this.calcEditor && this.resultContainer) {
       if (this.scrolling !== "editor") {
         this.scrolling = "result";
-        this.calcEditor.setScrollTop(this.resultContainer.scrollTop);
+        this.calcEditor
+          .getSession()
+          .setScrollTop(this.resultContainer.scrollTop);
 
         clearTimeout(this.scrollingTimeout);
         this.scrollingTimeout = setTimeout(() => {
@@ -191,35 +201,3 @@ export default class CalcEditor {
     });
   }
 }
-
-/*
-5 * 7.5415241
-round(5 * 7.5415241)
-round(5 * 7.5415241, 2)
-
-floor(2.324)
-ceil(2.324)
-
-f(x) = x ^ 2 - 5
-f(2)
-f(3)
-
-g(x, y) = x ^ y
-g(2, 3)
-
-a = 3.4
-b = 5 / 2
-a * b
-
-8 * 2
-8.5 / 2
-8 xor 5
-
-12.7 cm to inch
-sin(45 deg)^2
-9 / 3 + 2i
-1.2 * (2 + 4.5)
-cos(45 deg)
-sqrt(-4)
-sqrt(3^2 + 4^2)
-*/
