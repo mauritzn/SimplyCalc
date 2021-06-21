@@ -5,7 +5,6 @@ import "ace-builds/src-noconflict/ext-searchbox";
 //import "ace-builds/src-noconflict/ext-settings_menu";
 //import "ace-builds/webpack-resolver";
 import "../config/customAceMode";
-import aceConfig from "../config/aceConfig";
 
 // https://github.com/ajaxorg/ace/blob/ca4148/lib/ace/commands/default_commands.js
 const commandsToRemove = [
@@ -49,15 +48,38 @@ export class AceEditor {
     return this.editor.commands;
   }
 
-  constructor(elementId: string, readOnly: boolean = false) {
-    // create a copy of the config
-    let config = Object.assign({}, aceConfig) as Partial<Ace.EditorOptions>;
-    config.readOnly = readOnly;
-
-    this.editor = ace.edit(elementId, config);
+  constructor(
+    elementId: string,
+    options: Partial<Ace.EditorOptions> = { readOnly: false }
+  ) {
+    this.editor = ace.edit(
+      elementId,
+      Object.assign(
+        {
+          placeholder: "Math goes here",
+          value: "",
+          fontFamily: "Ubuntu Mono",
+          fontSize: 18,
+          tabSize: 2,
+          mode: "ace/mode/custom",
+          printMargin: false,
+          displayIndentGuides: false,
+          showFoldWidgets: false,
+          showLineNumbers: false,
+          showGutter: false,
+          showPrintMargin: false,
+          showInvisibles: false,
+          highlightGutterLine: false,
+          highlightActiveLine: false,
+          enableAutoIndent: false,
+          behavioursEnabled: true, // auto closing brackets, etc.
+        },
+        options
+      )
+    );
 
     let aceTextarea = this.container.querySelector("textarea");
-    if (aceTextarea) aceTextarea.id = "calcEditorTextarea";
+    if (aceTextarea) aceTextarea.id = `${elementId}Textarea`;
 
     commandsToRemove.map((command) => {
       this.commands.removeCommand(command);
@@ -82,6 +104,9 @@ export class AceEditor {
   }
   getValue(): string {
     return this.editor.getValue();
+  }
+  getValues(): string[] {
+    return this.getSession().getLines(0, this.getSession().getLength() - 1);
   }
 
   on(name: EditorEventNames, callback: (e: any) => void): Function {

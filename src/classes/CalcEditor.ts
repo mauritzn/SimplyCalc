@@ -1,22 +1,19 @@
-// https://github.com/ajaxorg/ace/blob/master/demo/webpack/demo.js
-// https://github.com/ajaxorg/ace/blob/ca4148/lib/ace/commands/default_commands.js
 import { AceEditor } from "./AceEditor";
-import MathResultHandler from "./MathResultHandler";
 
 export default class CalcEditor {
-  public calcEditor: AceEditor;
+  readonly aceEditor: AceEditor;
 
-  public scrollingTimeout: any = null;
-  public scrolling: string | null = null;
-  public scrollTimeoutDuration = 250;
+  public scrolling: boolean = false;
 
   public resultContainer: HTMLElement | null = null;
   //public editorPlaceholder: HTMLElement | null = null;
 
-  public mathResultHandler: MathResultHandler;
+  //public mathResultHandler: MathResultHandler;
 
   private _currentTextareaLine: number = 0;
-  private _mathInputs: any[] = [];
+
+  public onChange: (textLines: string[]) => void = () => {};
+  public onScrollTop: (scrollTop: number) => void = () => {};
 
   get currentTextareaLine(): number {
     return this._currentTextareaLine;
@@ -24,82 +21,47 @@ export default class CalcEditor {
   set currentTextareaLine(newValue: number) {
     this._currentTextareaLine = newValue;
 
-    if (this.resultContainer) {
-      if (newValue > 0 && this.editorInFocus) {
+    /* if (this.resultContainer) {
+      if (newValue > 0 && this.aceEditor.isFocused()) {
         this.resultContainer.classList.add("showActiveLine");
         this.mathResultHandler.highlightResult(newValue);
       } else {
         this.resultContainer.classList.remove("showActiveLine");
       }
-    }
-  }
-
-  get mathInputs(): any[] {
-    return this._mathInputs;
-  }
-  set mathInputs(newValue: any[]) {
-    this._mathInputs = newValue;
-    this.mathResultHandler.mathInputs = newValue;
+    } */
   }
 
   constructor() {
     this.resultContainer = document.querySelector(".mathResult");
-    this.mathResultHandler = new MathResultHandler(this.resultContainer);
+    //this.mathResultHandler = new MathResultHandler(this.resultContainer);
 
-    this.calcEditor = new AceEditor("calcEditor", false);
-    this.calcEditor.focus();
+    this.aceEditor = new AceEditor("calcEditor", { readOnly: false });
+    this.aceEditor.focus();
 
-    this.calcEditor.on("change", (event) => {
+    this.aceEditor.on("change", (event) => {
       //console.log(event);
-      const value = this.calcEditor.getValue();
-      this.mathInputs = this.parseMathInput(value);
+      this.onChange(this.getParsedValues());
     });
 
-    this.calcEditor.on("changeSelection", () => {
+    this.aceEditor.on("changeSelection", () => {
       this.setCurrentTextAreaLine();
     });
 
-    this.calcEditor.on("blur", () => {
+    this.aceEditor.on("blur", () => {
       this.currentTextareaLine = 0;
     });
-    this.calcEditor.on("focus", () => {
+    this.aceEditor.on("focus", () => {
       this.setCurrentTextAreaLine();
     });
 
-    this.calcEditor.getSession().on("changeScrollTop", (scrollTop) => {
-      if (this.calcEditor && this.resultContainer) {
-        if (this.scrolling !== "result") {
-          this.scrolling = "editor";
-          this.resultContainer.scrollTop = scrollTop;
-
-          clearTimeout(this.scrollingTimeout);
-          this.scrollingTimeout = setTimeout(() => {
-            if (this.calcEditor && this.resultContainer) {
-              this.resultContainer.scrollTop = this.calcEditor
-                .getSession()
-                .getScrollTop();
-            }
-            this.scrolling = null;
-          }, this.scrollTimeoutDuration);
-          return false;
-        }
-      }
+    this.aceEditor.getSession().on("changeScrollTop", (scrollTop) => {
+      this.onScrollTop(scrollTop);
     });
-
-    if (this.resultContainer) {
-      this.resultContainer.addEventListener("scroll", () =>
-        this.handleMathResultScroll()
-      );
-    }
-  }
-
-  get editorInFocus(): boolean {
-    return this.calcEditor ? this.calcEditor.isFocused() : false;
   }
 
   setCurrentTextAreaLine() {
-    if (this.calcEditor) {
-      const currentSelection = this.calcEditor.getSelectionRange();
+    if (this.aceEditor) {
+      const currentSelection = this.aceEditor.getSelectionRange();
       const startRow = currentSelection.start.row;
       const endRow = currentSelection.end.row;
       //console.log(currentSelection.start.row, currentSelection.end.row);
@@ -107,59 +69,42 @@ export default class CalcEditor {
       if (startRow !== endRow) {
         this.currentTextareaLine = 0;
       } else {
-        if (this.mathResultHandler.isResultLineEmpty(startRow + 1)) {
+        /* if (this.mathResultHandler.isResultLineEmpty(startRow + 1)) {
           this.currentTextareaLine = 0;
         } else {
           this.currentTextareaLine = startRow + 1;
-        }
+        } */
       }
     }
   }
 
-  handleMathResultScroll(): void {
-    if (this.calcEditor && this.resultContainer) {
-      if (this.scrolling !== "editor") {
-        this.scrolling = "result";
-        this.calcEditor
-          .getSession()
-          .setScrollTop(this.resultContainer.scrollTop);
-
-        clearTimeout(this.scrollingTimeout);
-        this.scrollingTimeout = setTimeout(() => {
-          this.scrolling = null;
-        }, this.scrollTimeoutDuration);
-      }
-    }
+  getParsedValues() {
+    const values = this.aceEditor.getValues();
+    return this.parseMathInput(values);
   }
 
-  parseMathInput(input: string): any[] {
+  parseMathInput(inputs: string[]): string[] {
     //const formattedMathInput = input; //.toLowerCase(); // .replace(",", ".")
-    let mathExpressions = input.split("\n");
 
-    return mathExpressions.map((expression: string) => {
-      expression = expression.trim();
-      expression = expression.replace(/[ ]+(plus|PLUS)[ ]+/g, " + ");
-      expression = expression.replace(/[ ]+(minus|MINUS)[ ]+/g, " - ");
-      expression = expression.replace(/[ ]+(divide|DIVIDE)[ ]+/g, " / ");
-      expression = expression.replace(/[ ]+(multiply|MULTIPLY)[ ]+/g, " * ");
-      expression = expression.replace(/[ ]+(modulo|MODULO)[ ]+/g, " % ");
+    return inputs.map((input: string) => {
+      input = input.trim();
+      input = input.replace(/[ ]+(plus|PLUS)[ ]+/g, " + ");
+      input = input.replace(/[ ]+(minus|MINUS)[ ]+/g, " - ");
+      input = input.replace(/[ ]+(divide|DIVIDE)[ ]+/g, " / ");
+      input = input.replace(/[ ]+(multiply|MULTIPLY)[ ]+/g, " * ");
+      input = input.replace(/[ ]+(modulo|MODULO)[ ]+/g, " % ");
 
       // check if expression contains list (e.g. [1,2,3])
-      if (!new RegExp("\\[.*?\\]").test(expression)) {
+      if (!new RegExp("\\[.*?\\]").test(input)) {
         // TODO: implement a more complex parser of number grouping,
         // since this currently ignores any line with a list in it (e.g. "[1,2,3] + 2,000", get ignored)
         // and the current one also incorrectly parses function arguments (e.g. test(12,345))
 
         //console.log("ran number grouping replace!", expression);
-        expression = expression.replace(
-          /([0-9]),([0-9]{3}),?([. \n]?)/g,
-          "$1$2$3"
-        );
+        input = input.replace(/([0-9]),([0-9]{3}),?([. \n]?)/g, "$1$2$3");
       }
 
-      return {
-        expression: expression,
-      };
+      return input;
     });
   }
 }

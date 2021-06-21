@@ -67,7 +67,7 @@ a:hover {
       overflow-y: auto;
       z-index: 25;
 
-      // same as in _calcEditor.scss (&.ace-tm .ace_scrollbar)
+      // same as in _aceEditor.scss (&.ace-tm .ace_scrollbar)
       &::-webkit-scrollbar-track {
         border-radius: 10px;
         background-color: var(--scrollbar-bg-color);
@@ -85,12 +85,12 @@ a:hover {
       }
     }
 
-    #calcEditor {
+    /* #calcEditor {
       overflow-y: hidden;
-    }
+    } */
 
     .mathResult {
-      color: var(--result-font-color);
+      //color: var(--result-font-color);
 
       &.showActiveLine > p {
         opacity: 0.5;
@@ -139,4 +139,4 @@ a:hover {
   }
 }
 
-@import "calcEditor";
+@import "aceEditor";
