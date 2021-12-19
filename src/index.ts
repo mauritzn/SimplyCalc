@@ -3,6 +3,7 @@ import CalcEditor from "./classes/CalcEditor";
 import ResultViewer from "./classes/ResultViewer";
 
 // TODO: highlight the current line in the result panel
+// FIXME: mathScope in ResultViewer.ts doesn't seem to forget unused variables
 
 const calcEditor = new CalcEditor();
 const resultViewer = new ResultViewer();
