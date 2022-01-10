@@ -36,7 +36,9 @@ export default class CalcEditor {
     //this.mathResultHandler = new MathResultHandler(this.resultContainer);
 
     this.aceEditor = new AceEditor("calcEditor", { readOnly: false });
-    this.aceEditor.focus();
+    if (window.location.search.toLowerCase() !== "?nofocus") {
+      this.aceEditor.focus();
+    }
 
     this.aceEditor.on("change", (event) => {
       //console.log(event);
