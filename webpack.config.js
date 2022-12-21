@@ -10,6 +10,7 @@ const webpackMode =
 
 module.exports = {
   target: "web",
+  devtool: false,
   mode: webpackMode === "production" ? "production" : "development",
   entry: "./src/index.ts",
   output: {
