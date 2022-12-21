@@ -3,7 +3,7 @@
 // Fix XSS (function) [use for all echos, or use the safe_echo function]
 if(!function_exists("xss_fix")) {
   function xss_fix($input) {
-    $output = filter_var(htmlspecialchars($input, ENT_QUOTES, "UTF-8"), FILTER_SANITIZE_STRING);
+    $output = htmlspecialchars($input, ENT_QUOTES, "UTF-8");
     $output = str_replace("/", "&#x2F;", $output);
     $output = str_replace("\\", "&#x5c;", $output);
     return $output;
