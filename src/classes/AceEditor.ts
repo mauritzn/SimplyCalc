@@ -109,7 +109,7 @@ export class AceEditor {
     return this.getSession().getLines(0, this.getSession().getLength() - 1);
   }
 
-  on(name: EditorEventNames, callback: (e: any) => void): Function {
+  on(name: EditorEventNames, callback: (e: any) => void): void {
     return this.editor.on(name as any, callback);
   }
 }
