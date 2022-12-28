@@ -77,9 +77,9 @@
 
 # Redirect to HTTPS (when not on localhost)
 RewriteEngine On
-RewriteCond %{HTTP_HOST} !=localhost
 RewriteCond %{HTTPS} !=on
-RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
+RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:[0-9]+)?$
+RewriteRule ^.*$ https://%{HTTP_HOST}%{REQUEST_URI} [R,L]
 
 # Custom error documents
 ErrorDocument 403 /_custom_error_page.php
