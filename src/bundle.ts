@@ -21,9 +21,11 @@ type HashAlgo =
   | "sha512"
   | "sha512-256";
 
-async function copy(inputFile: string, outputFolder: string) {
-  const outputFile = path.join(outputFolder, path.basename(inputFile));
-
+async function copy(
+  inputFile: string,
+  outputFolder: string,
+  ignoreParentFolder: boolean = false
+) {
   if (!fs.existsSync(outputFolder)) {
     fs.mkdirSync(outputFolder, { recursive: true });
   }
@@ -32,7 +34,20 @@ async function copy(inputFile: string, outputFolder: string) {
     throw new Error(`Missing input (${inputFile})!`);
   }
 
-  fs.cpSync(inputFile, outputFile, { recursive: true });
+  const inputStats = fs.statSync(inputFile);
+
+  if (ignoreParentFolder === true && inputStats.isDirectory() === true) {
+    const items = fs.readdirSync(inputFile);
+    for (const item of items) {
+      if ([".", ".."].includes(item) === false) {
+        const outputFile = path.join(outputFolder, path.basename(item));
+        fs.cpSync(path.join(inputFile, item), outputFile, { recursive: true });
+      }
+    }
+  } else {
+    const outputFile = path.join(outputFolder, path.basename(inputFile));
+    fs.cpSync(inputFile, outputFile, { recursive: true });
+  }
 }
 
 async function getFileHash(filePath: string, algo: HashAlgo = "sha256") {
@@ -128,6 +143,7 @@ console.log(`\nCopying relevant files to "${OUTPUT_DIR}" directory...`);
 await copy(`public/fonts`, OUTPUT_DIR_STATIC);
 await copy(`public/favicon.ico`, OUTPUT_DIR);
 await copy(`public/index.html`, OUTPUT_DIR);
+await copy(`_server files`, OUTPUT_DIR, true);
 console.timeEnd(`Copied relevant files to "${OUTPUT_DIR}" directory!`);
 
 // Compile SCSS
