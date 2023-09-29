@@ -74,6 +74,8 @@ export default class ResultViewer {
       // catch mathjs errors
       try {
         result = evaluateMath(input, mathScope);
+        result = [null, undefined, ""].includes(result) ? "" : String(result);
+
         if (new RegExp("^function", "i").test(result)) {
           if (new RegExp("^[ ]*([A-Za-z]+[ ]*(.*?))[ ]*=", "i").test(input)) {
             const match = new RegExp(
@@ -87,8 +89,6 @@ export default class ResultViewer {
             result = "Function";
           }
         }
-
-        result = [null, undefined].includes(result) ? "" : String(result);
 
         // Add comments to result
         if (new RegExp("[ ]*#.*?$", "i").test(input)) {

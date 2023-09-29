@@ -20,6 +20,8 @@ export default class MathResultHandler {
       // catch mathjs errors
       try {
         result = mathjs.evaluate(input.expression, this.mathScope);
+        result = [null, undefined, ""].includes(result) ? "" : String(result);
+
         if (new RegExp("^function", "i").test(result)) {
           if (
             new RegExp("^[ ]*([A-Za-z]+[ ]*(.*?))[ ]*=", "i").test(
@@ -37,8 +39,6 @@ export default class MathResultHandler {
             result = "Function";
           }
         }
-
-        result = [null, undefined].includes(result) ? null : String(result);
 
         // Add comments to result
         if (new RegExp("[ ]*#.*?$", "i").test(input.expression)) {
@@ -65,7 +65,7 @@ export default class MathResultHandler {
         }
       } catch (err) {}
 
-      return [null, undefined].includes(result) ? null : result;
+      return [null, undefined, ""].includes(result) ? null : result;
     });
   }
 
@@ -102,13 +102,13 @@ export default class MathResultHandler {
         }
 
         if (newResult !== currentResult) {
-          resultLine.innerHTML = newResult;
+          resultLine.innerHTML = newResult === null ? "" : newResult;
         }
       });
     } else {
       // nothing to check, simply add results
       newValue.map((value, key) => {
-        this.addResultLine(key + 1, value);
+        this.addResultLine(key + 1, value === null ? "" : value);
       });
     }
   }
