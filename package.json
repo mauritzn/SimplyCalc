@@ -1,37 +1,23 @@
 {
   "name": "simplycalc",
-  "description": "Calculator built using Math.js",
-  "keywords": [],
   "version": "0.3.0",
+  "webTitle": "SimplyCalc",
+  "description": "Calculator built using Math.js. Supports custom functions and variables. Also supports most of the functions that Mathjs has.",
   "author": "Mauritz Nilsson <mail@mauritzonline.com>",
   "homepage": "https://mauritzonline.com/",
-  "private": true,
   "license": "MIT",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "NODE_ENV='production' webpack --progress",
-    "dev": "NODE_ENV='development' webpack --progress",
-
-    "build-win": "SET NODE_ENV=production & webpack --progress",
-    "dev-win": "SET NODE_ENV=development & webpack --progress"
+    "build": "NODE_ENV='production' bun run ./src/bundle.ts",
+    "dev": "NODE_ENV='development' bun run --watch ./src/bundle.ts"
   },
   "devDependencies": {
     "@types/mathjs": "^9.4.1",
-    "clean-terminal-webpack-plugin": "^3.0.0",
-    "css-loader": "^6.7.3",
-    "html-webpack-plugin": "^5.5.0",
-    "mini-css-extract-plugin": "^2.7.3",
-    "prettier": "^2.8.4",
-    "sass": "^1.59.3",
-    "sass-loader": "^13.2.0",
-    "style-loader": "^3.3.2",
-    "ts-loader": "^9.4.2",
-    "typescript": "^4.9.5",
-    "webpack": "^5.76.1",
-    "webpack-cli": "^5.0.1"
+    "bun-types": "^1.0.3",
+    "sass": "^1.68.0"
   },
   "dependencies": {
-    "ace-builds": "^1.15.3",
-    "mathjs": "^11.7.0"
+    "ace-builds": "^1.28.0",
+    "mathjs": "^11.11.1"
   }
 }

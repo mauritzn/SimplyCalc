@@ -1,9 +1,11 @@
-import "./css/app.scss";
 import CalcEditor from "./classes/CalcEditor";
 import ResultViewer from "./classes/ResultViewer";
+import { version as appVersion } from "../package.json";
 
 // TODO: highlight the current line in the result panel
 // FIXME: mathScope in ResultViewer.ts doesn't seem to forget unused variables
+
+console.log(`SimplyCalc v${appVersion}`);
 
 const calcEditor = new CalcEditor();
 const resultViewer = new ResultViewer();

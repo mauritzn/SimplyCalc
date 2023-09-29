@@ -25,23 +25,17 @@ Supports conversions from different lengths and weights.
 ## Project setup
 
 ```
-npm install
-```
-
-### Compiles and hot-reloads for development (not implemented yet)
-
-```
-npm run serve
+bun install
 ```
 
 ### Compiles and watches for changes for development
 
 ```
-npm run dev
+bun run dev
 ```
 
 ### Compiles and minifies for production
 
 ```
-npm run build
+bun run build
 ```
