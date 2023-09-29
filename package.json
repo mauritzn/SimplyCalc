@@ -1,6 +1,6 @@
 {
   "name": "simplycalc",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "webTitle": "SimplyCalc",
   "description": "Calculator built using Math.js. Supports custom functions and variables. Also supports most of the functions that Mathjs has.",
   "author": "Mauritz Nilsson <mail@mauritzonline.com>",
