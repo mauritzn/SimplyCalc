@@ -12,8 +12,8 @@
     "dev": "NODE_ENV='development' bun run --watch ./src/bundle.ts"
   },
   "devDependencies": {
+    "@types/bun": "^1.0.10",
     "@types/mathjs": "^9.4.1",
-    "bun-types": "^1.0.3",
     "sass": "^1.68.0"
   },
   "dependencies": {
