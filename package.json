@@ -14,10 +14,10 @@
   "devDependencies": {
     "@types/bun": "^1.0.10",
     "@types/mathjs": "^9.4.1",
-    "sass": "^1.68.0"
+    "sass": "^1.72.0"
   },
   "dependencies": {
-    "ace-builds": "^1.28.0",
-    "mathjs": "^11.11.1"
+    "ace-builds": "^1.32.8",
+    "mathjs": "^12.4.1"
   }
 }
