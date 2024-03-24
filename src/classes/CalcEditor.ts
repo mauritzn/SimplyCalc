@@ -40,7 +40,7 @@ export default class CalcEditor {
       this.aceEditor.focus();
     }
 
-    this.aceEditor.on("change", (event) => {
+    this.aceEditor.on("change", (_event) => {
       //console.log(event);
       this.onChange(this.getParsedValues());
     });

@@ -3,7 +3,7 @@ import * as mathjs from "mathjs";
 export default class MathResultHandler {
   private mathScope: any = {};
   private resultContainer: HTMLElement;
-  private _mathInputs: any[] = [];
+  //private _mathInputs: any[] = [];
   private _results: Array<string | null> = [];
 
   constructor(resultContainer: HTMLElement) {
@@ -12,9 +12,9 @@ export default class MathResultHandler {
   }
 
   public set mathInputs(newValue: any[]) {
-    this._mathInputs = newValue;
+    //this._mathInputs = newValue;
 
-    this.results = newValue.map((input: any, index: number) => {
+    this.results = newValue.map((input: any, _index: number) => {
       let result: string | null = null;
 
       // catch mathjs errors
@@ -114,7 +114,7 @@ export default class MathResultHandler {
   }
 
   public highlightResult(lineNumber: number): void {
-    this.results.map((result: any, index: number) => {
+    this.results.map((_result: any, index: number) => {
       let element = this.getResultLine(index + 1);
       if (element) {
         if (lineNumber - 1 === index) {

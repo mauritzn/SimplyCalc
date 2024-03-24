@@ -9,7 +9,7 @@ export default class ResultViewer {
 
   public onScrollTop: (scrollTop: number) => void = () => {};
 
-  private _currentTextareaLine: number = 0;
+  //private _currentTextareaLine: number = 0;
 
   /* get currentTextareaLine(): number {
     return this._currentTextareaLine;
@@ -68,7 +68,7 @@ export default class ResultViewer {
 
   handleMath(textLines: string[]) {
     let mathScope = {};
-    const results = textLines.map((input: string, index: number) => {
+    const results = textLines.map((input: string, _index: number) => {
       let result: string | null = null;
 
       // catch mathjs errors
