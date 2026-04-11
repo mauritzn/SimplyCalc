@@ -1,5 +1,8 @@
 # SimplyCalc
 
+> [!WARNING]
+> This repository is no longer maintained. I have ceased all updates and support for this project. It's source code is quite simple so feel free to fork it if you want to create your own version. But I will not be providing any support for this project. I'd like to make another calculator in the future, but it would be quite different from this one.
+
 Calculator built using Math.js, inspired by [Caligator](https://github.com/sarthology/caligator).
 
 Supports custom functions and variables. Also supports most of the functions that Mathjs has _([Mathjs functions](https://mathjs.org/docs/reference/functions.html))_.
