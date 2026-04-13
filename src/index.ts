@@ -1,4 +1,3 @@
-/// <reference lib="dom" />
 import CalcEditor from "./classes/CalcEditor";
 import ResultViewer from "./classes/ResultViewer";
 import { version as appVersion } from "../package.json";

@@ -21,7 +21,7 @@
   }
 
   .ace_scrollbar {
-    //scroll-behavior: smooth;
+    /* scroll-behavior: smooth; */
 
     &::-webkit-scrollbar-track {
       border-radius: 10px;
@@ -69,7 +69,7 @@
       background: #3a3d41;
     }
     .ace_selected-word {
-      // TODO: improve
+      /* TODO: improve */
       background: transparent;
       border: none;
     }

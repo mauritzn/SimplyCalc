@@ -20,20 +20,23 @@ export default class MathResultHandler {
       // catch mathjs errors
       try {
         result = mathjs.evaluate(input.expression, this.mathScope);
-        result = [null, undefined, ""].includes(result) ? "" : String(result);
+        result =
+          result === null || result === undefined || result === ""
+            ? ""
+            : String(result);
 
         if (new RegExp("^function", "i").test(result)) {
           if (
             new RegExp("^[ ]*([A-Za-z]+[ ]*(.*?))[ ]*=", "i").test(
-              input.expression
+              input.expression,
             )
           ) {
             const match = new RegExp(
               "^[ ]*([A-Za-z]+[ ]*(.*?))[ ]*=",
-              "i"
+              "i",
             ).exec(input.expression);
-            if (match) {
-              result = match[1];
+            if (match && match.length >= 2) {
+              result = match[1]!;
             }
           } else {
             result = "Function";
@@ -86,7 +89,7 @@ export default class MathResultHandler {
       } else if (resultLines.length > newValue.length) {
         // remove unneeded result lines
         for (let i = resultLines.length - 1; i >= newValue.length; i--) {
-          resultLines[i].remove();
+          resultLines[i]?.remove();
         }
       }
 
@@ -102,7 +105,8 @@ export default class MathResultHandler {
         }
 
         if (newResult !== currentResult) {
-          resultLine.innerHTML = newResult === null ? "" : newResult;
+          resultLine.innerHTML =
+            newResult === null || newResult === undefined ? "" : newResult;
         }
       });
     } else {
@@ -131,7 +135,7 @@ export default class MathResultHandler {
 
   public getResultLine(lineNumber: number): HTMLElement | null {
     return document.querySelector(
-      `.mathResult p[key="${String(lineNumber - 1)}"]`
+      `.mathResult p[key="${String(lineNumber - 1)}"]`,
     );
   }
   private addPlaceholderResultLine(): void {

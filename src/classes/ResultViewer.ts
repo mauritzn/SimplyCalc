@@ -80,10 +80,10 @@ export default class ResultViewer {
           if (new RegExp("^[ ]*([A-Za-z]+[ ]*(.*?))[ ]*=", "i").test(input)) {
             const match = new RegExp(
               "^[ ]*([A-Za-z]+[ ]*(.*?))[ ]*=",
-              "i"
+              "i",
             ).exec(input);
-            if (match) {
-              result = match[1];
+            if (match && match.length >= 2) {
+              result = match[1]!;
             }
           } else {
             result = "Function";

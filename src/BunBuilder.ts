@@ -6,7 +6,8 @@ import fs from "fs";
  * @file This Class makes it easier to run Bun's build/bundle command
  * @author Mauritz Nilsson - https://github.com/mauritzn
  * @license MIT
- * @version 0.0.2
+ * @version 0.0.2-patched
+ * @note This class has been modified to remove the SASS compiler & implement a new way of importing the CSS files, honestly I do NOT recommend ever using this class in it's current state, this is a very poor patch just to get SASS removed.
  *
  * I wanted to move over a lot of old projects to use Bun,
  * but a lot of code reuse had to occur so the `bundle.ts` file always ended up being massive.
@@ -14,7 +15,7 @@ import fs from "fs";
  *
  * Features:
  *  - Old output cleanup
- *  - SASS compiler
+ *  - SASS compiler [removed]
  *  - Copy files/folders to output folder
  *  - Generate HTML source links for CSS and JS (with file hashes for better cache support)
  *  - Replace markers in HTML templates, for adding HTML source links, dynamic titles, etc.
@@ -51,23 +52,15 @@ export class BunBuilder {
   private _outputFolder: string;
   private _prodEnvName: string;
   private _envMode: "production" | "development" | "both" = "both";
-  private _sassCompiler;
-  private _sassCompileSupported = false;
 
   constructor(
     entrypoint: string,
     outputFolder: string,
-    prodEnvName: string = "NODE_ENV"
+    prodEnvName: string = "NODE_ENV",
   ) {
     this._entrypoint = entrypoint;
     this._outputFolder = outputFolder;
     this._prodEnvName = prodEnvName.trim();
-    this._sassCompiler = function (
-      path: string,
-      options?: SassOptions<"sync">
-    ): CompileResult {
-      return { css: "", loadedUrls: [] };
-    };
 
     if (!fs.existsSync(this._entrypoint)) {
       throw new Error(`Missing entrypoint (${this._entrypoint})!`);
@@ -106,7 +99,7 @@ export class BunBuilder {
   private async _copyItem(
     inputFile: string,
     outputFolder: string,
-    ignoreParentFolder: boolean = false
+    ignoreParentFolder: boolean = false,
   ) {
     if (!fs.existsSync(outputFolder)) {
       fs.mkdirSync(outputFolder, { recursive: true });
@@ -152,7 +145,7 @@ export class BunBuilder {
   public async build(
     outputName: string,
     subDir: string = "",
-    outputMode: "esm" | "iife" = "iife"
+    outputMode: "esm" | "iife" = "iife",
   ) {
     let buildProd = false;
     let buildDev = false;
@@ -188,7 +181,7 @@ export class BunBuilder {
         entrypoints: ["src/index.ts"],
         outdir: jsOutputDir,
         target: "browser",
-        format: "esm", // INFO: should be "iife", but that isn't supported yet
+        format: outputMode,
         naming: `[dir]/${outputName}.min.[ext]`,
         splitting: false,
         minify: true,
@@ -209,7 +202,7 @@ export class BunBuilder {
         entrypoints: ["src/index.ts"],
         outdir: jsOutputDir,
         target: "browser",
-        format: "esm", // INFO: should be "iife", but that isn't supported yet
+        format: outputMode,
         naming: `[dir]/${outputName}.[ext]`,
         splitting: false,
         minify: false,
@@ -217,109 +210,26 @@ export class BunBuilder {
       });
       console.timeEnd(`Built non-minified version!`);
     }
-
-    if (outputMode === "iife") {
-      // Add IIFE
-      console.time(`Added IIFE to the built bundle!`);
-      console.log(`\nAdding IIFE to the built bundle...`);
-
-      if (buildProd) {
-        let bundleMinifiedSrc = fs.readFileSync(
-          path.join(jsOutputDir, `${outputName}.min.js`),
-          {
-            encoding: "utf-8",
-          }
-        );
-
-        bundleMinifiedSrc = `(function () {${bundleMinifiedSrc.trim()}})();`;
-
-        fs.writeFileSync(
-          path.join(jsOutputDir, `${outputName}.min.js`),
-          bundleMinifiedSrc,
-          {
-            encoding: "utf-8",
-          }
-        );
-      }
-
-      if (buildDev) {
-        let bundleNonMinifiedSrc = fs.readFileSync(
-          path.join(jsOutputDir, `${outputName}.js`),
-          {
-            encoding: "utf-8",
-          }
-        );
-
-        bundleNonMinifiedSrc = `(function () {\n${bundleNonMinifiedSrc.trim()}\n})();`;
-
-        fs.writeFileSync(
-          path.join(jsOutputDir, `${outputName}.js`),
-          bundleNonMinifiedSrc,
-          {
-            encoding: "utf-8",
-          }
-        );
-      }
-
-      console.timeEnd(`Added IIFE to the built bundle!`);
-    }
-  }
-
-  public async addSassCompiler(compiler: any) {
-    this._sassCompiler = compiler;
-    this._sassCompileSupported = true;
-  }
-
-  public async compileSass(
-    inputFile: string,
-    outputName: string,
-    subDir: string = ""
-  ) {
-    if (!this._sassCompileSupported) {
-      throw new Error(
-        `Missing SASS compiler (add it using the "addSassCompiler" method)!`
-      );
-    }
-
-    outputName = outputName.trim();
-    subDir = subDir.trim();
-
-    const cssOutputDir =
-      subDir.length > 0
-        ? path.join(this._outputFolder, subDir)
-        : this._outputFolder;
-
-    if (!fs.existsSync(inputFile)) {
-      throw new Error(`Missing input file (${inputFile})!`);
-    }
-
-    // Compile SCSS
-    console.time(`Compiled ${outputName} SCSS to CSS!`);
-    console.log(`\nCompiling ${outputName} SCSS to CSS...`);
-    fs.mkdirSync(cssOutputDir, { recursive: true });
-
-    const compileResult = this._sassCompiler(inputFile);
-    fs.writeFileSync(
-      path.join(cssOutputDir, `${outputName}.css`),
-      compileResult.css,
-      {
-        encoding: "utf-8",
-      }
-    );
-    console.timeEnd(`Compiled ${outputName} SCSS to CSS!`);
   }
 
   public async copy(...toCopy: string[][]) {
     // Copy relevant files
     console.time(`Copied relevant files to "${this._outputFolder}" directory!`);
     console.log(
-      `\nCopying relevant files to "${this._outputFolder}" directory...`
+      `\nCopying relevant files to "${this._outputFolder}" directory...`,
     );
 
     toCopy = toCopy.filter((item) => item.length > 0);
     for await (const item of toCopy) {
-      let inputFile = item[0];
-      const subDir = item.length > 1 ? item[1].trim() : "";
+      const firstEl = item.at(0);
+      const secondEl = item.at(1) ?? "";
+
+      if (firstEl === undefined) {
+        throw new Error(`Missing item to copy (given: "${firstEl}")!`);
+      }
+
+      let inputFile = firstEl;
+      const subDir = item.length > 1 ? secondEl.trim() : "";
       const outputDir =
         subDir.length > 0
           ? path.join(this._outputFolder, subDir)
@@ -338,14 +248,14 @@ export class BunBuilder {
       await this._copyItem(inputFile, outputDir, ignoreParentFolder);
     }
     console.timeEnd(
-      `Copied relevant files to "${this._outputFolder}" directory!`
+      `Copied relevant files to "${this._outputFolder}" directory!`,
     );
   }
 
   public async generateFileReplacement(
     inputFile: string,
     subDir: string = "",
-    marker: string = ""
+    marker: string = "",
   ): Promise<string[]> {
     marker = marker.trim();
     const inputFileExt = path
@@ -364,8 +274,39 @@ export class BunBuilder {
 
     if (!fs.existsSync(inputFilePath)) {
       throw new Error(
-        `Given input file could not be found (${inputFilePath})!`
+        `Given input file could not be found (${inputFilePath})!`,
       );
+    }
+
+    if (inputFile.toLowerCase().trim() === "css") {
+      const inputStats = fs.statSync(inputFilePath);
+      if (inputStats.isDirectory() === true) {
+        const items = fs
+          .readdirSync(inputFilePath)
+          .filter((item) => item !== "." && item !== "..")
+          .toSorted();
+
+        let cssLinksElements: string[] = [];
+        for (const item of items) {
+          const fileExt = path
+            .extname(item)
+            .replaceAll(".", "")
+            .trim()
+            .toLowerCase();
+          if (fileExt !== "css") continue;
+          const cssFileInputPath = path.join(
+            inputFilePath,
+            path.basename(item),
+          );
+          const cssFilePublicPath = path.join(publicPath, path.basename(item));
+          const fileHash = await getFileHash(cssFileInputPath);
+          cssLinksElements.push(
+            `<link rel="stylesheet" href="${cssFilePublicPath}?h=${fileHash}" />`,
+          );
+        }
+
+        return ["css", cssLinksElements.join("\n    ")];
+      }
     }
 
     const fileHash = await getFileHash(inputFilePath);
@@ -384,7 +325,7 @@ export class BunBuilder {
 
       default:
         throw new Error(
-          `Only "css, js" files are support currently (input type: ${inputFileExt})!`
+          `Only "css, js" files are support currently (input type: ${inputFileExt})!`,
         );
     }
   }
@@ -396,7 +337,7 @@ export class BunBuilder {
 
     if (inputFile.trim().toLowerCase().endsWith(".html") === false) {
       throw new Error(
-        `Only HTML files can be used as template files (${inputFile})!`
+        `Only HTML files can be used as template files (${inputFile})!`,
       );
     }
 
@@ -410,13 +351,18 @@ export class BunBuilder {
 
     replacements = replacements.filter((item) => item.length > 0);
     for (const replacement of replacements) {
-      if (replacement.length < 2) {
-        throw new Error(`Missing replacement value (${replacement[0]})!`);
+      const firstEl = replacement.at(0);
+      const secondEl = replacement.at(1);
+
+      if (firstEl === undefined || secondEl === undefined) {
+        throw new Error(
+          `Missing replacement value (first: "${firstEl}", second: "${secondEl}")!`,
+        );
       }
 
       htmlSrc = htmlSrc.replace(
-        `<!-- BUN:${replacement[0].trim().toUpperCase()} -->`,
-        replacement[1].trim()
+        `<!-- BUN:${firstEl.trim().toUpperCase()} -->`,
+        secondEl.trim(),
       );
     }
 
@@ -425,7 +371,7 @@ export class BunBuilder {
       htmlSrc,
       {
         encoding: "utf-8",
-      }
+      },
     );
 
     console.timeEnd(`Added data to HTML file!`);
@@ -436,37 +382,4 @@ export class BunBuilder {
     console.log("");
     console.timeEnd("> Done");
   }
-}
-
-// SASS interfaces
-type OutputStyle = "expanded" | "compressed";
-interface SassOptions<sync extends "sync" | "async"> {
-  alertAscii?: boolean;
-  alertColor?: boolean;
-  charset?: boolean;
-  functions?: any;
-  importers?: any;
-  loadPaths?: string[];
-  logger?: any;
-  quietDeps?: boolean;
-  sourceMap?: boolean;
-  sourceMapIncludeSources?: boolean;
-  style?: OutputStyle;
-  verbose?: boolean;
-}
-interface CompileResult {
-  css: string;
-  loadedUrls: URL[];
-  sourceMap?: RawSourceMap;
-}
-interface StartOfSourceMap {
-  file?: string;
-  sourceRoot?: string;
-}
-interface RawSourceMap extends StartOfSourceMap {
-  version: string;
-  sources: string[];
-  names: string[];
-  sourcesContent?: string[];
-  mappings: string;
 }

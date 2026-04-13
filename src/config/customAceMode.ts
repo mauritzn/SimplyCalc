@@ -17,10 +17,11 @@ ace.define(
   (acequire: any, exports: any) => {
     const oop = acequire("ace/lib/oop");
     const TextMode = acequire("ace/mode/text").Mode;
-    const CustomHighlightRules = acequire("ace/mode/custom_highlight_rules")
-      .CustomHighlightRules;
+    const CustomHighlightRules = acequire(
+      "ace/mode/custom_highlight_rules",
+    ).CustomHighlightRules;
 
-    var Mode = function () {
+    var Mode = function (this: any) {
       this.HighlightRules = CustomHighlightRules;
       //this.foldingRules = new IniFoldMode();
       this.$behaviour = this.$defaultBehaviour;
@@ -28,7 +29,7 @@ ace.define(
 
     oop.inherits(Mode, TextMode); // ACE's way of doing inheritance
     exports.Mode = Mode; // eslint-disable-line no-param-reassign
-  }
+  },
 );
 
 // This is where we really create the highlighting rules
@@ -37,12 +38,13 @@ ace.define(
   ["require", "exports", "ace/lib/oop", "ace/mode/text_highlight_rules"],
   (acequire: any, exports: any) => {
     const oop = acequire("ace/lib/oop");
-    const TextHighlightRules = acequire("ace/mode/text_highlight_rules")
-      .TextHighlightRules;
+    const TextHighlightRules = acequire(
+      "ace/mode/text_highlight_rules",
+    ).TextHighlightRules;
 
     const keywords = ["and", "not", "or", "xor", "in", "to", "pi"];
 
-    const CustomHighlightRules = function CustomHighlightRules() {
+    const CustomHighlightRules = function CustomHighlightRules(this: any) {
       this.$rules = {
         start: [
           {
@@ -107,5 +109,5 @@ ace.define(
 
     oop.inherits(CustomHighlightRules, TextHighlightRules);
     exports.CustomHighlightRules = CustomHighlightRules;
-  }
+  },
 );
